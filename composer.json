@@ -1,0 +1,33 @@
+{
+    "name": "aeliot/env-resolver",
+    "type": "library",
+    "description": "Resolver of environment variables",
+    "keywords": [
+        "env",
+        "env-processor",
+        "env-resolver"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anatoliy Melnikov",
+            "email": "5785276@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Aeliot\\EnvResolver\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/*": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.2"
+    }
+}
