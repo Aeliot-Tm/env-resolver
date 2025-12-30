@@ -19,6 +19,11 @@
             "Aeliot\\EnvResolver\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Aeliot\\EnvResolver\\Test\\Unit\\": "tests/Unit"
+        }
+    },
     "config": {
         "allow-plugins": {
             "composer/*": true
@@ -29,5 +34,32 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.2"
+    },
+    "scripts": {
+        "check-all": [
+            "@cs-fixer-check",
+            "@phpstan",
+            "@phpunit"
+        ],
+        "cs-baseline": "@cs-fixer-baseline",
+        "cs-check": "@cs-fixer-check",
+        "cs-fix": "@cs-fixer-fix",
+        "cs-fixer-baseline": "XDEBUG_MODE=off tools/pcsf-baseline.phar -b .scripts/php-cs-fixer/baseline.json -c .scripts/php-cs-fixer/config.php -f .scripts/php-cs-fixer/finder.php",
+        "cs-fixer-check": "@cs-fixer-fix --dry-run",
+        "cs-fixer-fix": "tools/php-cs-fixer.phar fix -vv --config=.scripts/php-cs-fixer/config.php",
+        "phive-install": "phive install --trust-gpg-keys $(cat .phive/trust-gpg-keys.txt)",
+        "phpstan": [
+            "@phpstan-clear",
+            "@phpstan-analyse"
+        ],
+        "phpstan-analyse": "tools/phpstan.phar analyse -c .scripts/phpstan/config.neon --memory-limit=256M",
+        "phpstan-baseline": [
+            "@phpstan-clear",
+            "@phpstan-analyse --generate-baseline .scripts/phpstan/baseline.neon --allow-empty-baseline"
+        ],
+        "phpstan-clear": "tools/phpstan.phar clear-result-cache -c .scripts/phpstan/config.neon",
+        "phpunit": "tools/phpunit.phar -c .scripts/phpunit/phpunit.xml",
+        "require-check": "tools/composer-require-checker.phar check --config-file=.scripts/composer-require-checker/config.json composer.json --output=text",
+        "unused": "XDEBUG_MODE=off tools/composer-unused.phar unused -c ./.scripts/composer-unused/config.php"
     }
 }

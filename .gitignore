@@ -1,0 +1,6 @@
+.idea
+/.mcp/serena/config/logs/*/*.txt
+/tools
+/var
+/vendor
+/.env
