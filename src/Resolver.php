@@ -1,0 +1,89 @@
+<?php
+declare(strict_types=1);
+
+namespace Aeliot\EnvResolver;
+
+use Aeliot\EnvResolver\Exception\EnvFoundException;
+use Aeliot\EnvResolver\Exception\FileNotFoundException;
+use Aeliot\EnvResolver\Exception\InvalidNameException;
+
+final readonly class Resolver
+{
+    public function __construct(private ThreadBuilder $threadBuilder = new ThreadBuilder())
+    {
+    }
+
+    public function resolve(string $heap): mixed
+    {
+        $value = null;
+        $steps = $this->threadBuilder->getSteps($heap);
+        foreach ($steps as $step) {
+            $modifier = $step[0];
+            switch ($modifier) {
+                case 'const':
+                    $name = $step[1] ?? $value;
+                    if (!\is_scalar($name)) {
+                        throw new InvalidNameException(
+                            \sprintf(
+                                'Invalid constant name: const var "%s" is non-scalar (resolved from "%s").',
+                                $name,
+                                $heap
+                            )
+                        );
+                    }
+                    if (!\defined($name)) {
+                        throw new EnvFoundException(
+                            \sprintf('Undefined constant "%s" (resolved from "%s").', $name, $heap)
+                        );
+                    }
+
+                    $value = \constant($name);
+                    break;
+                case 'env':
+                    $name = $step[1] ?? $value;
+                    if (!\is_scalar($name)) {
+                        throw new InvalidNameException(
+                            \sprintf(
+                                'Invalid environment name: env var "%s" is non-scalar (resolved from "%s").',
+                                $name,
+                                $heap
+                            )
+                        );
+                    }
+
+                    if (isset($_ENV) && array_key_exists($name, $_ENV)) {
+                        $value = $_ENV[$name];
+                    } elseif (false === ($value = getenv($name))) {
+                        throw new EnvFoundException(
+                            \sprintf('Undefined environment variable "%s" (resolved from "%s").', $name, $heap)
+                        );
+                    }
+
+                    break;
+                case 'file':
+                case 'require':
+                    $name = $step[1] ?? $value;
+                    if (!\is_scalar($name)) {
+                        throw new InvalidNameException(
+                            \sprintf(
+                                'Invalid file name: env var "%s" is non-scalar (resolved from "%s").',
+                                $name,
+                                $heap
+                            )
+                        );
+                    }
+                    if (!is_file($name)) {
+                        throw new FileNotFoundException(
+                            \sprintf('File "%s" not found (resolved from "%s").', $name, $heap)
+                        );
+                    }
+
+                    $value = 'file' === $modifier ? \file_get_contents($name) : require $name;
+
+                    break;
+            }
+        }
+
+        return $value;
+    }
+}

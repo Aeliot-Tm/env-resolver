@@ -1,0 +1,167 @@
+<?php
+declare(strict_types=1);
+
+namespace Aeliot\EnvResolver\Test\Unit;
+
+use Aeliot\EnvResolver\Exception\EnvFoundException;
+use Aeliot\EnvResolver\Exception\FileNotFoundException;
+use Aeliot\EnvResolver\Exception\InvalidNameException;
+use Aeliot\EnvResolver\Resolver;
+use Aeliot\EnvResolver\ThreadBuilder;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\TestCase;
+
+#[CoversClass(Resolver::class)]
+#[UsesClass(ThreadBuilder::class)]
+final class ResolverTest extends TestCase
+{
+    protected function setUp(): void
+    {
+        define('RESOLVER_TEST_CONST_A', 'CONST_A');
+        define('RESOLVER_TEST_CONST_FROM_FILE', 'CONST_FROM_FILE');
+        define('RESOLVER_TEST_CONST_FROM_REQUIRE', 'CONST_FROM_REQUIRE');
+        define('RESOLVER_TEST_CONST_NAME_DONOR', 'RESOLVER_TEST_CONST_RESULTING');
+        define('RESOLVER_TEST_CONST_RESULTING', 'CONST_RESULTING');
+        define('RESOLVER_TEST_CONST_UNDEFINED_DONOR', 'RESOLVER_TEST_CONST_UNDEFINED');
+
+        $_ENV['RESOLVER_TEST_ENV_A'] = 'ENV_A';
+        $_ENV['RESOLVER_TEST_ENV_BASE64_EMPTY_ARRAY'] = 'W10=';
+        $_ENV['RESOLVER_TEST_ENV_BASE64_INVALID'] = '()';
+        $_ENV['RESOLVER_TEST_ENV_FROM_FILE'] = 'ENV_FROM_FILE';
+        $_ENV['RESOLVER_TEST_ENV_FROM_REQUIRE'] = 'ENV_FROM_REQUIRE';
+        $_ENV['RESOLVER_TEST_ENV_NAME_DONOR'] = 'RESOLVER_TEST_ENV_RESULTING';
+        $_ENV['RESOLVER_TEST_ENV_RESULTING'] = 'ENV_RESULTING';
+        $_ENV['RESOLVER_TEST_ENV_FILE_WITH_CONTENT'] = 'tests/fixtures/Unit/ResolverTest/file_with_content.txt';
+        $_ENV['RESOLVER_TEST_ENV_REQUIRE_WITH_CONTENT'] = 'tests/fixtures/Unit/ResolverTest/require_with_content.php';
+        $_ENV['RESOLVER_TEST_ENV_UNDEFINED_DONOR'] = 'RESOLVER_TEST_ENV_UNDEFINED';
+        putenv("RESOLVER_TEST_ENV_PUTENV=ENV_PUTENV");
+    }
+
+    public static function getDataForTestRuntimeException(): iterable
+    {
+        yield 'const undefined' => [EnvFoundException::class, 'const:RESOLVER_TEST_CONST_UNDEFINED'];
+        yield 'const undefined from const' => [
+            EnvFoundException::class,
+            'const:const:RESOLVER_TEST_CONST_UNDEFINED_DONOR',
+        ];
+        yield 'const from required array' => [
+            InvalidNameException::class,
+            'const:require:tests/fixtures/Unit/ResolverTest/empty_array.php',
+        ];
+
+        yield 'env undefined by $_ENV' => [
+            EnvFoundException::class,
+            'RESOLVER_TEST_ENV_UNDEFINED',
+        ];
+        yield 'env undefined by getenv' => [
+            EnvFoundException::class,
+            'RESOLVER_TEST_ENV_UNDEFINED_FROM_PUTENV',
+        ];
+        yield 'env undefined from env' => [
+            EnvFoundException::class,
+            'env:env:RESOLVER_TEST_ENV_UNDEFINED_DONOR',
+        ];
+        yield 'env from required array' => [
+            InvalidNameException::class,
+            'env:require:tests/fixtures/Unit/ResolverTest/empty_array.php',
+        ];
+
+        yield 'file not fount' => [
+            FileNotFoundException::class,
+            'file:tests/fixtures/Unit/ResolverTest/not_existing_file.txt',
+        ];
+        yield 'file from required array' => [
+            InvalidNameException::class,
+            'file:require:tests/fixtures/Unit/ResolverTest/empty_array.php',
+        ];
+        yield 'require from required array' => [
+            InvalidNameException::class,
+            'require:require:tests/fixtures/Unit/ResolverTest/empty_array.php',
+        ];
+        yield 'require not fount' => [
+            FileNotFoundException::class,
+            'require:tests/fixtures/Unit/ResolverTest/not_existing_file.txt',
+        ];
+    }
+
+    public static function getDataForTestPositiveFlow(): iterable
+    {
+        // Simple env variable
+        yield 'simple env' => ['ENV_A', 'RESOLVER_TEST_ENV_A'];
+        yield 'explicit env' => ['ENV_A', 'env:RESOLVER_TEST_ENV_A'];
+        yield 'simple env from getenv' => ['ENV_PUTENV', 'RESOLVER_TEST_ENV_PUTENV'];
+        yield 'env from env' => ['ENV_RESULTING', 'env:env:RESOLVER_TEST_ENV_NAME_DONOR'];
+
+        // Simple constant
+        yield 'simple const' => ['CONST_A', 'const:RESOLVER_TEST_CONST_A'];
+        yield 'const from const' => ['CONST_RESULTING', 'const:const:RESOLVER_TEST_CONST_NAME_DONOR'];
+
+        // File processor
+        yield 'file modifier' => [
+            'FILE_CONTENT',
+            'file:tests/fixtures/Unit/ResolverTest/file_with_content.txt',
+        ];
+        yield 'file from env' => [
+            'FILE_CONTENT',
+            'file:env:RESOLVER_TEST_ENV_FILE_WITH_CONTENT',
+        ];
+        yield 'file from file' => [
+            'FILE_CONTENT',
+            'file:file:tests/fixtures/Unit/ResolverTest/file_from_file.txt',
+        ];
+
+        yield 'require modifier' => [
+            'REQUIRE_CONTENT',
+            'require:tests/fixtures/Unit/ResolverTest/require_with_content.php',
+        ];
+        yield 'require from env' => [
+            'REQUIRE_CONTENT',
+            'require:env:RESOLVER_TEST_ENV_REQUIRE_WITH_CONTENT',
+        ];
+        yield 'require from require' => [
+            'REQUIRE_CONTENT',
+            'require:require:tests/fixtures/Unit/ResolverTest/require_from_require.php',
+        ];
+        yield 'file from require' => [
+            'FILE_CONTENT',
+            'file:require:tests/fixtures/Unit/ResolverTest/file_from_require.php',
+        ];
+        yield 'require from file' => [
+            'REQUIRE_CONTENT',
+            'require:file:tests/fixtures/Unit/ResolverTest/require_from_file.txt',
+        ];
+
+        yield 'env from file' => [
+            'ENV_FROM_FILE',
+            'env:file:tests/fixtures/Unit/ResolverTest/env_from_file.txt',
+        ];
+        yield 'env from require' => [
+            'ENV_FROM_REQUIRE',
+            'env:require:tests/fixtures/Unit/ResolverTest/env_from_require.php',
+        ];
+
+        yield 'const from file' => [
+            'CONST_FROM_FILE',
+            'const:file:tests/fixtures/Unit/ResolverTest/const_from_file.txt',
+        ];
+        yield 'const from require' => [
+            'CONST_FROM_REQUIRE',
+            'const:require:tests/fixtures/Unit/ResolverTest/const_from_require.php',
+        ];
+    }
+
+    #[DataProvider('getDataForTestPositiveFlow')]
+    public function testPositiveFlow(mixed $expected, string $heap): void
+    {
+        self::assertSame($expected, (new Resolver())->resolve($heap));
+    }
+
+    #[DataProvider('getDataForTestRuntimeException')]
+    public function testRuntimeException(string $expected, string $heap): void
+    {
+        $this->expectException($expected);
+        (new Resolver())->resolve($heap);
+    }
+}
