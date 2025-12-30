@@ -6,6 +6,7 @@ namespace Aeliot\EnvResolver;
 use Aeliot\EnvResolver\Exception\EnvFoundException;
 use Aeliot\EnvResolver\Exception\FileNotFoundException;
 use Aeliot\EnvResolver\Exception\InvalidNameException;
+use Aeliot\EnvResolver\Exception\InvalidValueException;
 
 final readonly class Resolver
 {
@@ -20,6 +21,21 @@ final readonly class Resolver
         foreach ($steps as $step) {
             $modifier = $step[0];
             switch ($modifier) {
+                case 'base64':
+                    $value = $step[1] ?? $value;
+                    if (!\is_scalar($value)) {
+                        throw new InvalidNameException(\sprintf('Non-scalar base64 (resolved from "%s").', $heap));
+                    }
+                    // replace for the handling of URL-safe
+                    $value = strtr((string)($step[1] ?? $value), '-_', '+/');
+                    if (preg_match('~[^A-Za-z0-9+/=]~', $value)) {
+                        throw new InvalidValueException(\sprintf('Invalid base64 (resolved from "%s").', $heap));
+                    }
+                    $value = base64_decode($value);
+                    if (false === $value) {
+                        throw new InvalidValueException(\sprintf('Cannot decode base64 (resolved from "%s").', $heap));
+                    }
+                    break;
                 case 'const':
                     $name = $step[1] ?? $value;
                     if (!\is_scalar($name)) {

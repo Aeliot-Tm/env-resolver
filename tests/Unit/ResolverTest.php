@@ -6,6 +6,7 @@ namespace Aeliot\EnvResolver\Test\Unit;
 use Aeliot\EnvResolver\Exception\EnvFoundException;
 use Aeliot\EnvResolver\Exception\FileNotFoundException;
 use Aeliot\EnvResolver\Exception\InvalidNameException;
+use Aeliot\EnvResolver\Exception\InvalidValueException;
 use Aeliot\EnvResolver\Resolver;
 use Aeliot\EnvResolver\ThreadBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -84,6 +85,11 @@ final class ResolverTest extends TestCase
             FileNotFoundException::class,
             'require:tests/fixtures/Unit/ResolverTest/not_existing_file.txt',
         ];
+
+        yield 'base64 invalid' => [
+            InvalidValueException::class,
+            'base64:RESOLVER_TEST_ENV_BASE64_INVALID',
+        ];
     }
 
     public static function getDataForTestPositiveFlow(): iterable
@@ -149,6 +155,16 @@ final class ResolverTest extends TestCase
         yield 'const from require' => [
             'CONST_FROM_REQUIRE',
             'const:require:tests/fixtures/Unit/ResolverTest/const_from_require.php',
+        ];
+
+        yield 'base64 to empty array string' => [
+            '[]',
+            'base64:RESOLVER_TEST_ENV_BASE64_EMPTY_ARRAY',
+        ];
+
+        yield 'double base64 to empty array string' => [
+            '[]',
+            'base64:base64:VzEwPQ=='
         ];
     }
 

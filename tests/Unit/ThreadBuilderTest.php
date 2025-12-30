@@ -20,6 +20,7 @@ final class ThreadBuilderTest extends TestCase
 
         // Modifier as env name
         yield 'env as env key' => [[['env', 'env']], 'env'];
+        yield 'base64 as env key' => [[['env', 'base64']], 'base64'];
         yield 'const as env key' => [[['env', 'const']], 'const'];
         yield 'file as env key' => [[['env', 'file']], 'file'];
         yield 'require as env key' => [[['env', 'require']], 'require'];
@@ -45,6 +46,15 @@ final class ThreadBuilderTest extends TestCase
 
         yield 'env from file' => [[['file', 'MY_ENV'], ['env']], 'env:file:MY_ENV'];
         yield 'env from require' => [[['require', 'MY_ENV'], ['env']], 'env:require:MY_ENV'];
+
+        // Simple modifiers
+        yield 'base64 of env' => [[['env', 'MY_ENV'], ['base64']], 'base64:MY_ENV'];
+        yield 'base64 of env explicitly' => [[['env', 'MY_ENV'], ['base64']], 'base64:env:MY_ENV'];
+        yield 'double base64 from base64' => [[['base64', 'W10='], ['base64']], 'base64:base64:W10='];
+        yield 'double base64 from explicit env' => [
+            [['env', 'MY_ENV'], ['base64'], ['base64']],
+            'base64:base64:env:MY_ENV',
+        ];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]
