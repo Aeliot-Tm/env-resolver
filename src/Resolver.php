@@ -22,19 +22,12 @@ final readonly class Resolver
         $value = null;
         $steps = $this->threadBuilder->getSteps($heap);
         foreach ($steps as $step) {
-            $modifier = $step[0];
-            switch ($modifier) {
+            switch ($step[0]) {
                 case 'base64':
                     $value = $this->resolveBase64($step, $value, $heap);
                     break;
                 case 'bool':
-                case 'not':
                     $value = $this->resolveBool($step, $value, $heap);
-
-                    if ('not' === $modifier) {
-                        $value = !$value;
-                    }
-
                     break;
                 case 'const':
                     $value = $this->resolveConst($step, $value, $heap);
@@ -49,7 +42,6 @@ final readonly class Resolver
                     $value = $this->resolveEnv($step, $value, $heap);
                     break;
                 case 'file':
-                case 'require':
                     $value = $this->resolveFile($step, $value, $heap);
                     break;
                 case 'float':
@@ -61,11 +53,17 @@ final readonly class Resolver
                 case 'json':
                     $value = $this->resolveJson($value, $heap);
                     break;
+                case 'not':
+                    $value = !$this->resolveBool($step, $value, $heap);
+                    break;
                 case 'key':
                     $value = $this->resolveKey($step, $value, $heap);
                     break;
                 case 'query_string':
                     $value = $this->resolveQueryString($value);
+                    break;
+                case 'require':
+                    $value = $this->resolveRequire($step, $value, $heap);
                     break;
                 case 'strcsv':
                     $value = $this->resolveCsvString($value, $heap);
@@ -214,27 +212,19 @@ final readonly class Resolver
         return $value;
     }
 
-    private function resolveFile(array $step, mixed $value, string $heap): mixed
+    private function resolveFile(array $step, mixed $value, string $heap): string
     {
         $name = $step[1] ?? $value;
-        if (!\is_scalar($name)) {
-            throw new InvalidNameException(
-                \sprintf(
-                    'Invalid file name: env var "%s" is non-scalar (resolved from "%s").',
-                    $name,
-                    $heap
-                )
-            );
-        }
-        if (!is_file($name)) {
+        $this->validateFileName($name, $heap);
+
+        $contents = \file_get_contents($name);
+        if (false === $contents) {
             throw new FileNotFoundException(
-                \sprintf('File "%s" not found (resolved from "%s").', $name, $heap)
+                \sprintf('File "%s" not readable (resolved from "%s").', $name, $heap)
             );
         }
 
-        $modifier = $step[0];
-
-        return 'file' === $modifier ? \file_get_contents($name) : require $name;
+        return $contents;
     }
 
     private function resolveFloat(mixed $value, string $heap): float
@@ -304,6 +294,14 @@ final readonly class Resolver
         return $result;
     }
 
+    private function resolveRequire(array $step, mixed $value, string $heap): mixed
+    {
+        $name = $step[1] ?? $value;
+        $this->validateFileName($name, $heap);
+
+        return require $name;
+    }
+
     private function resolveURL(mixed $value, string $heap): mixed
     {
         $params = parse_url($value);
@@ -350,5 +348,23 @@ final readonly class Resolver
         $params['path'] = '/' === ($params['path'] ?? '/') ? '' : substr($params['path'], 1);
 
         return $params;
+    }
+
+    private function validateFileName(mixed $name, string $heap): void
+    {
+        if (!\is_scalar($name)) {
+            throw new InvalidNameException(
+                \sprintf(
+                    'Invalid file name: env var "%s" is non-scalar (resolved from "%s").',
+                    $name,
+                    $heap
+                )
+            );
+        }
+        if (!is_file($name)) {
+            throw new FileNotFoundException(
+                \sprintf('File "%s" not found (resolved from "%s").', $name, $heap)
+            );
+        }
     }
 }
