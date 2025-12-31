@@ -162,9 +162,9 @@ final class ResolverTest extends TestCase
             'base64:RESOLVER_TEST_ENV_BASE64_EMPTY_ARRAY',
         ];
 
-        yield 'double base64 to empty array string' => [
+        yield 'direct double base64 to empty array string' => [
             '[]',
-            'base64:base64:VzEwPQ=='
+            'base64:base64:direct:VzEwPQ=='
         ];
     }
 

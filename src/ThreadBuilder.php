@@ -6,7 +6,7 @@ namespace Aeliot\EnvResolver;
 final readonly class ThreadBuilder
 {
     /**
-     * @return string[]
+     * @return array<int,array<int,string>>
      */
     public function getSteps(string $heap): array
     {
@@ -15,7 +15,7 @@ final readonly class ThreadBuilder
         $count = count($parts);
         if (1 === $count){
             array_unshift($parts, 'env');
-        } elseif(!\in_array($parts[$count - 2], ['const', 'env', 'file', 'require'], true)) {
+        } elseif(!\in_array($parts[$count - 2], ['const', 'direct', 'env', 'file', 'require'], true)) {
             $parts = [...array_slice($parts, 0, $count - 1), 'env', $parts[$count - 1]];
         }
 
@@ -25,6 +25,13 @@ final readonly class ThreadBuilder
 
             $step = [];
             if (in_array($part, ['const', 'env', 'file', 'require'], true)) {
+                $step[] = $part;
+                if (1 === $count) {
+                    $step[] = array_shift($parts);
+                }
+            }
+
+            if ('direct' === $part) {
                 $step[] = $part;
                 if (1 === $count) {
                     $step[] = array_shift($parts);

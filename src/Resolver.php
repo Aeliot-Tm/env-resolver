@@ -55,6 +55,14 @@ final readonly class Resolver
 
                     $value = \constant($name);
                     break;
+                case 'direct':
+                    if (2 < \count($step)) {
+                        throw new InvalidValueException(
+                            \sprintf('Undefined direct value (resolved from "%s").', $heap)
+                        );
+                    }
+                    $value = $step[1];
+                    break;
                 case 'env':
                     $name = $step[1] ?? $value;
                     if (!\is_scalar($name)) {
