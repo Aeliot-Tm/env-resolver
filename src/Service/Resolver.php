@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Aeliot\EnvResolver\Service;
 
+use Aeliot\EnvResolver\Enum\Modifier;
 use Aeliot\EnvResolver\Exception\EnvFoundException;
 use Aeliot\EnvResolver\Exception\FileNotFoundException;
 use Aeliot\EnvResolver\Exception\InvalidEnumException;
@@ -23,25 +24,25 @@ final readonly class Resolver
         $steps = $this->threadBuilder->getSteps($heap);
         foreach ($steps as $step) {
             $value = match ($step[0]) {
-                'base64' => $this->resolveBase64($step, $value, $heap),
-                'bool' => $this->resolveBool($step, $value, $heap),
-                'const' => $this->resolveConst($step, $value, $heap),
-                'direct' => $this->resolveDirect($step, $heap),
-                'enum' => $this->resolveEnum($step, $value, $heap),
-                'env' => $this->resolveEnv($step, $value, $heap),
-                'file' => $this->resolveFile($step, $value, $heap),
-                'float' => $this->resolveFloat($value, $heap),
-                'int' => $this->resolveInt($value, $heap),
-                'json' => $this->resolveJson($value, $heap),
-                'not' => !$this->resolveBool($step, $value, $heap),
-                'key' => $this->resolveKey($step, $value, $heap),
-                'query_string' => $this->resolveQueryString($value),
-                'require' => $this->resolveRequire($step, $value, $heap),
-                'strcsv' => $this->resolveCsvString($value, $heap),
-                'string' => (string)$value,
-                'trim' => trim((string)$value),
-                'url' => $this->resolveURL($value, $heap),
-                'urlencode' => urlencode((string)$value),
+                Modifier::BASE64 => $this->resolveBase64($step, $value, $heap),
+                Modifier::BOOL => $this->resolveBool($step, $value, $heap),
+                Modifier::CONST => $this->resolveConst($step, $value, $heap),
+                Modifier::DIRECT => $this->resolveDirect($step, $heap),
+                Modifier::ENUM => $this->resolveEnum($step, $value, $heap),
+                Modifier::ENV => $this->resolveEnv($step, $value, $heap),
+                Modifier::FILE => $this->resolveFile($step, $value, $heap),
+                Modifier::FLOAT => $this->resolveFloat($value, $heap),
+                Modifier::INT => $this->resolveInt($value, $heap),
+                Modifier::JSON => $this->resolveJson($value, $heap),
+                Modifier::NOT => !$this->resolveBool($step, $value, $heap),
+                Modifier::KEY => $this->resolveKey($step, $value, $heap),
+                Modifier::QUERY_STRING => $this->resolveQueryString($value),
+                Modifier::REQUIRE => $this->resolveRequire($step, $value, $heap),
+                Modifier::STR_CSV => $this->resolveCsvString($value, $heap),
+                Modifier::STRING => (string)$value,
+                Modifier::TRIM => trim((string)$value),
+                Modifier::URL => $this->resolveURL($value, $heap),
+                Modifier::URL_ENCODE => urlencode((string)$value),
             };
         }
 

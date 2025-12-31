@@ -3,39 +3,43 @@ declare(strict_types=1);
 
 namespace Aeliot\EnvResolver\Service;
 
+use Aeliot\EnvResolver\Enum\Modifier;
 use Aeliot\EnvResolver\Exception\InvalidHeapException;
 
 final readonly class ThreadBuilder
 {
     /**
-     * @return list<int,list<int,string>>
+     * @return list<int,array{0: string, 1?: string}>
      */
     public function getSteps(string $heap): array
     {
         $steps = [];
         $parts = $this->getParts($heap);
+        $supported = array_flip((new \ReflectionClass(Modifier::class))->getConstants());
 
         do {
             $part = array_shift($parts);
+            if (!isset($supported[$part])) {
+                throw new InvalidHeapException(sprintf('Unexpected modifier "%s" in heap: %s', $part, $heap));
+            }
             $step = [$part];
-            if (in_array($part, ['const', 'env', 'file', 'require'], true)) {
+            if (in_array($part, [Modifier::CONST, Modifier::ENV, Modifier::FILE, Modifier::REQUIRE], true)) {
                 if (1 === count($parts)) {
                     $step[] = array_shift($parts);
                 }
-            } elseif ('direct' === $part) {
+            } elseif (Modifier::DIRECT === $part) {
                 if (1 !== count($parts)) {
-                    throw new InvalidHeapException(sprintf('Modifier "direct" allowed only as penultimate. (resolved from "%s")', $heap));
+                    throw new InvalidHeapException(
+                        sprintf('Modifier "direct" allowed only as penultimate. (resolved from "%s")', $heap)
+                    );
                 }
                 $step[] = array_shift($parts);
-            } elseif (in_array($part, ['enum', 'key'], true)) {
+            } elseif (in_array($part, [Modifier::ENUM, Modifier::KEY], true)) {
                 if (count($parts) < 3) {
                     // expects at least: modifier -> modifier_supporter -> source -> source_key
                     throw new InvalidHeapException(sprintf('Missed "%s" in heap: %s', $part, $heap));
                 }
                 $step[] = array_shift($parts);
-            } elseif (!$this->isLonelyModifier($part)) {
-                // DO NOTHING
-                throw new InvalidHeapException(sprintf('Unexpected modifier "%s" in heap: %s', $part, $heap));
             }
 
             $steps[] = $step;
@@ -51,30 +55,20 @@ final readonly class ThreadBuilder
     {
         $parts = explode(':', $heap);
         $count = count($parts);
-        if (1 === $count){
-            array_unshift($parts, 'env');
-        } elseif(!\in_array($parts[$count - 2], ['const', 'direct', 'env', 'file', 'require'], true)) {
-            $parts = [...array_slice($parts, 0, $count - 1), 'env', $parts[$count - 1]];
+        if (1 === $count) {
+            // add default 'env' when single
+            array_unshift($parts, Modifier::ENV);
+        } elseif (!\in_array($parts[$count - 2], [
+            Modifier::CONST,
+            Modifier::DIRECT,
+            Modifier::ENV,
+            Modifier::FILE,
+            Modifier::REQUIRE,
+        ], true)) {
+            // default penultimate to 'env'
+            $parts = [...array_slice($parts, 0, $count - 1), Modifier::ENV, $parts[$count - 1]];
         }
 
         return $parts;
-    }
-
-    public function isLonelyModifier(string $part): bool
-    {
-        return in_array($part, [
-            'bool',
-            'base64',
-            'float',
-            'int',
-            'json',
-            'not',
-            'query_string',
-            'strcsv',
-            'string',
-            'trim',
-            'url',
-            'urlencode',
-        ], true);
     }
 }
