@@ -1,3 +1,140 @@
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: '#^Match expression does not handle remaining value\: mixed$#'
+			identifier: match.unhandled
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\Resolver\:\:resolveBase64\(\) has parameter \$step with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\Resolver\:\:resolveBool\(\) has parameter \$step with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\Resolver\:\:resolveConst\(\) has parameter \$step with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\Resolver\:\:resolveDirect\(\) has parameter \$step with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\Resolver\:\:resolveEnum\(\) has parameter \$step with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\Resolver\:\:resolveEnv\(\) has parameter \$step with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\Resolver\:\:resolveFile\(\) has parameter \$step with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\Resolver\:\:resolveKey\(\) has parameter \$step with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\Resolver\:\:resolveQueryString\(\) should return array\<string, mixed\> but returns array\<int\|string, array\<mixed\>\|string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\Resolver\:\:resolveRequire\(\) has parameter \$step with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Parameter \#1 \$constant_name of function defined expects string, bool\|float\|int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function is_file expects string, bool\|float\|int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, bool\|float\|int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Parameter \#1 \$name of function constant expects string, bool\|float\|int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Parameter \#1 \$varname of function getenv expects string, bool\|float\|int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, BackedEnum\|class\-string\<BackedEnum\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Variable \$_ENV in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: ../../src/Service/Resolver.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\ThreadBuilder\:\:getSteps\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/ThreadBuilder.php
+
+		-
+			message: '#^PHPDoc tag @return contains unresolvable type\.$#'
+			identifier: return.unresolvableType
+			count: 1
+			path: ../../src/Service/ThreadBuilder.php
+
+		-
+			message: '#^Method Aeliot\\EnvResolver\\Service\\ThreadBuilderInterface\:\:getSteps\(\) return type has no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../../src/Service/ThreadBuilderInterface.php
+
+		-
+			message: '#^PHPDoc tag @return contains unresolvable type\.$#'
+			identifier: return.unresolvableType
+			count: 1
+			path: ../../src/Service/ThreadBuilderInterface.php
 
