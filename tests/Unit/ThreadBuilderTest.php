@@ -50,7 +50,7 @@ final class ThreadBuilderTest extends TestCase
         // Simple modifiers
         yield 'base64 of env' => [[['env', 'MY_ENV'], ['base64']], 'base64:MY_ENV'];
         yield 'base64 of env explicitly' => [[['env', 'MY_ENV'], ['base64']], 'base64:env:MY_ENV'];
-        yield 'double base64 from base64' => [[['base64', 'W10='], ['base64']], 'base64:base64:W10='];
+        yield 'double base64 from base64' => [[['env', 'W10='], ['base64'], ['base64']], 'base64:base64:W10='];
         yield 'double base64 from explicit env' => [
             [['env', 'MY_ENV'], ['base64'], ['base64']],
             'base64:base64:env:MY_ENV',

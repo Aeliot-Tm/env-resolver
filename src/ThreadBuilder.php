@@ -12,13 +12,16 @@ final readonly class ThreadBuilder
     {
         $steps = [];
         $parts = explode(':', $heap);
+        $count = count($parts);
+        if (1 === $count){
+            array_unshift($parts, 'env');
+        } elseif(!\in_array($parts[$count - 2], ['const', 'env', 'file', 'require'], true)) {
+            $parts = [...array_slice($parts, 0, $count - 1), 'env', $parts[$count - 1]];
+        }
+
         do {
             $part = array_shift($parts);
             $count = count($parts);
-            if (!$count) {
-                $steps[] = ['env', $part];
-                break;
-            }
 
             $step = [];
             if (in_array($part, ['const', 'env', 'file', 'require'], true)) {
