@@ -42,15 +42,6 @@ final readonly class ThreadBuilder
                 'base64',
             ], true)) {
                 $step[] = $part;
-                if (1 === $count) {
-                    $tail = array_shift($parts);
-                    if (!$steps) {
-                        $steps[] = [$part];
-                        $steps[] = ['env', $tail];
-                        break;
-                    }
-                    $step[] = $tail;
-                }
             }
 
             $steps[] = $step;
