@@ -12,17 +12,16 @@ use Aeliot\EnvResolver\Exception\InvalidValueException;
 use Aeliot\EnvResolver\Exception\KeyFoundException;
 use Aeliot\EnvResolver\Exception\NotSupportedEnumCaseException;
 
-final readonly class Resolver
+final readonly class Resolver implements ResolverInterface
 {
-    public function __construct(private ThreadBuilder $threadBuilder = new ThreadBuilder())
+    public function __construct(private ThreadBuilderInterface $threadBuilder = new ThreadBuilder())
     {
     }
 
     public function resolve(string $heap): mixed
     {
         $value = null;
-        $steps = $this->threadBuilder->getSteps($heap);
-        foreach ($steps as $step) {
+        foreach ($this->threadBuilder->getSteps($heap) as $step) {
             $value = match ($step[0]) {
                 Modifier::BASE64 => $this->resolveBase64($step, $value, $heap),
                 Modifier::BOOL => $this->resolveBool($step, $value, $heap),

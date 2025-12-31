@@ -6,7 +6,7 @@ namespace Aeliot\EnvResolver\Service;
 use Aeliot\EnvResolver\Enum\Modifier;
 use Aeliot\EnvResolver\Exception\InvalidHeapException;
 
-final readonly class ThreadBuilder
+final readonly class ThreadBuilder implements ThreadBuilderInterface
 {
     /**
      * @return list<int,array{0: string, 1?: string}>
