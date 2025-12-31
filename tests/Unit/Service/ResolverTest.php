@@ -24,12 +24,15 @@ final class ResolverTest extends TestCase
 {
     protected function setUp(): void
     {
-        define('RESOLVER_TEST_CONST_A', 'CONST_A');
-        define('RESOLVER_TEST_CONST_FROM_FILE', 'CONST_FROM_FILE');
-        define('RESOLVER_TEST_CONST_FROM_REQUIRE', 'CONST_FROM_REQUIRE');
-        define('RESOLVER_TEST_CONST_NAME_DONOR', 'RESOLVER_TEST_CONST_RESULTING');
-        define('RESOLVER_TEST_CONST_RESULTING', 'CONST_RESULTING');
-        define('RESOLVER_TEST_CONST_UNDEFINED_DONOR', 'RESOLVER_TEST_CONST_UNDEFINED');
+        // Constants can only be defined once per PHP process
+        if (!defined('RESOLVER_TEST_CONST_A')) {
+            define('RESOLVER_TEST_CONST_A', 'CONST_A');
+            define('RESOLVER_TEST_CONST_FROM_FILE', 'CONST_FROM_FILE');
+            define('RESOLVER_TEST_CONST_FROM_REQUIRE', 'CONST_FROM_REQUIRE');
+            define('RESOLVER_TEST_CONST_NAME_DONOR', 'RESOLVER_TEST_CONST_RESULTING');
+            define('RESOLVER_TEST_CONST_RESULTING', 'CONST_RESULTING');
+            define('RESOLVER_TEST_CONST_UNDEFINED_DONOR', 'RESOLVER_TEST_CONST_UNDEFINED');
+        }
 
         $_ENV['RESOLVER_TEST_ENV_A'] = 'ENV_A';
         $_ENV['RESOLVER_TEST_ENV_BASE64_EMPTY_ARRAY'] = 'W10=';

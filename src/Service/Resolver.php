@@ -88,8 +88,8 @@ final readonly class Resolver implements ResolverInterface
         if (!\is_scalar($name)) {
             throw new InvalidNameException(
                 \sprintf(
-                    'Invalid constant name: const var "%s" is non-scalar (resolved from "%s").',
-                    $name,
+                    'Invalid constant name: value of type "%s" is non-scalar (resolved from "%s").',
+                    get_debug_type($name),
                     $heap
                 )
             );
@@ -156,8 +156,8 @@ final readonly class Resolver implements ResolverInterface
         if (!\is_scalar($name)) {
             throw new InvalidNameException(
                 \sprintf(
-                    'Invalid environment name: env var "%s" is non-scalar (resolved from "%s").',
-                    $name,
+                    'Invalid environment name: value of type "%s" is non-scalar (resolved from "%s").',
+                    get_debug_type($name),
                     $heap
                 )
             );
@@ -317,8 +317,8 @@ final readonly class Resolver implements ResolverInterface
         if (!\is_scalar($name)) {
             throw new InvalidNameException(
                 \sprintf(
-                    'Invalid file name: env var "%s" is non-scalar (resolved from "%s").',
-                    $name,
+                    'Invalid file name: value of type "%s" is non-scalar (resolved from "%s").',
+                    get_debug_type($name),
                     $heap
                 )
             );
