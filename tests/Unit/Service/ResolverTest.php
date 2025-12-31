@@ -1,5 +1,15 @@
 <?php
+
 declare(strict_types=1);
+
+/*
+ * This file is part of the Env Resolver project.
+ *
+ * (c) Anatoliy Melnikov <5785276@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Aeliot\EnvResolver\Test\Unit\Service;
 
@@ -25,13 +35,13 @@ final class ResolverTest extends TestCase
     protected function setUp(): void
     {
         // Constants can only be defined once per PHP process
-        if (!defined('RESOLVER_TEST_CONST_A')) {
-            define('RESOLVER_TEST_CONST_A', 'CONST_A');
-            define('RESOLVER_TEST_CONST_FROM_FILE', 'CONST_FROM_FILE');
-            define('RESOLVER_TEST_CONST_FROM_REQUIRE', 'CONST_FROM_REQUIRE');
-            define('RESOLVER_TEST_CONST_NAME_DONOR', 'RESOLVER_TEST_CONST_RESULTING');
-            define('RESOLVER_TEST_CONST_RESULTING', 'CONST_RESULTING');
-            define('RESOLVER_TEST_CONST_UNDEFINED_DONOR', 'RESOLVER_TEST_CONST_UNDEFINED');
+        if (!\defined('RESOLVER_TEST_CONST_A')) {
+            \define('RESOLVER_TEST_CONST_A', 'CONST_A');
+            \define('RESOLVER_TEST_CONST_FROM_FILE', 'CONST_FROM_FILE');
+            \define('RESOLVER_TEST_CONST_FROM_REQUIRE', 'CONST_FROM_REQUIRE');
+            \define('RESOLVER_TEST_CONST_NAME_DONOR', 'RESOLVER_TEST_CONST_RESULTING');
+            \define('RESOLVER_TEST_CONST_RESULTING', 'CONST_RESULTING');
+            \define('RESOLVER_TEST_CONST_UNDEFINED_DONOR', 'RESOLVER_TEST_CONST_UNDEFINED');
         }
 
         $_ENV['RESOLVER_TEST_ENV_A'] = 'ENV_A';
@@ -210,7 +220,7 @@ final class ResolverTest extends TestCase
             'const:require:tests/fixtures/Unit/ResolverTest/const_from_require.php',
         ];
 
-        yield 'base64 to empty array string' => ['[]', 'base64:RESOLVER_TEST_ENV_BASE64_EMPTY_ARRAY',];
+        yield 'base64 to empty array string' => ['[]', 'base64:RESOLVER_TEST_ENV_BASE64_EMPTY_ARRAY'];
         yield 'direct double base64 to empty array string' => ['[]', 'base64:base64:direct:VzEwPQ=='];
 
         yield 'bool true from direct int value' => [true, 'bool:direct:1'];
@@ -276,8 +286,8 @@ final class ResolverTest extends TestCase
                 'query' => 'arg=value',
                 'fragment' => 'anchor',
             ],
-            //http://username:password@hostname:9090/path?arg=value#anchor
-            'url:base64:direct:aHR0cDovL3VzZXJuYW1lOnBhc3N3b3JkQGhvc3RuYW1lOjkwOTAvcGF0aD9hcmc9dmFsdWUjYW5jaG9y'
+            // http://username:password@hostname:9090/path?arg=value#anchor
+            'url:base64:direct:aHR0cDovL3VzZXJuYW1lOnBhc3N3b3JkQGhvc3RuYW1lOjkwOTAvcGF0aD9hcmc9dmFsdWUjYW5jaG9y',
         ];
         yield 'urlencode value' => ['Data123%21%40-_+%2B', 'urlencode:base64:direct:RGF0YTEyMyFALV8gKw=='];
 

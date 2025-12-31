@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the WP Vulnerability Scanner project.
+ * This file is part of the Env Resolver project.
  *
  * (c) Anatoliy Melnikov <5785276@gmail.com>
  *
@@ -16,4 +16,3 @@ use ComposerUnused\ComposerUnused\Configuration\Configuration;
 return static function (Configuration $config): Configuration {
     return $config;
 };
-

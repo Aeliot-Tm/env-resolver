@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the WP Vulnerability Scanner project.
+ * This file is part of the Env Resolver project.
  *
  * (c) Anatoliy Melnikov <5785276@gmail.com>
  *
@@ -26,7 +26,7 @@ $rules = [
     ],
     'header_comment' => [
         'header' => <<<'EOF'
-            This file is part of the WP Vulnerability Scanner project.
+            This file is part of the Env Resolver project.
 
             (c) Anatoliy Melnikov <5785276@gmail.com>
 
@@ -35,6 +35,7 @@ $rules = [
             EOF,
     ],
     'phpdoc_align' => ['align' => 'left'],
+    'single_line_throw' => false,
 ];
 
 $config = (new PhpCsFixer\Config())
@@ -47,4 +48,3 @@ $finder = require __DIR__ . '/finder.php';
 $finder->filter((new FilterFactory())->createFilter(__DIR__ . '/baseline.json', $config));
 
 return $config->setFinder($finder);
-

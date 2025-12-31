@@ -1,5 +1,15 @@
 <?php
+
 declare(strict_types=1);
+
+/*
+ * This file is part of the Env Resolver project.
+ *
+ * (c) Anatoliy Melnikov <5785276@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Aeliot\EnvResolver\Test\Unit\Service;
 
@@ -171,7 +181,7 @@ final class StringProcessorTest extends TestCase
         // Custom postProcessor to join array elements instead of json_encode
         $result = $processor->process(
             'items: %env(json:direct:["apple","banana"])%',
-            static fn (mixed $value): string => is_array($value) ? implode(', ', $value) : (string) $value
+            static fn (mixed $value): string => \is_array($value) ? implode(', ', $value) : (string) $value
         );
         self::assertSame('items: apple, banana', $result);
     }

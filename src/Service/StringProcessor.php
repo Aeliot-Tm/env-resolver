@@ -1,5 +1,15 @@
 <?php
+
 declare(strict_types=1);
+
+/*
+ * This file is part of the Env Resolver project.
+ *
+ * (c) Anatoliy Melnikov <5785276@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Aeliot\EnvResolver\Service;
 
@@ -27,7 +37,7 @@ final readonly class StringProcessor
     public function process(string $config, ?\Closure $postProcessor = null): string
     {
         $postProcessor ??= static function (mixed $value): string {
-            return is_string($value) ? $value : json_encode($value, JSON_THROW_ON_ERROR);
+            return \is_string($value) ? $value : json_encode($value, \JSON_THROW_ON_ERROR);
         };
 
         // Step 1: Replace escaped %% with temporary marker
@@ -44,11 +54,11 @@ final readonly class StringProcessor
 
             // Process placeholders from right to left to preserve positions
             foreach (array_reverse($placeholders) as [$start, $end, $heap]) {
-                $resolvedValue = (string)$postProcessor($this->resolver->resolve($heap));
-                $config = substr($config, 0, $start).$resolvedValue.substr($config, $end);
+                $resolvedValue = (string) $postProcessor($this->resolver->resolve($heap));
+                $config = substr($config, 0, $start) . $resolvedValue . substr($config, $end);
             }
 
-            $depth++;
+            ++$depth;
         }
 
         // Step 3: Restore escaped %% back to single %
@@ -62,8 +72,8 @@ final readonly class StringProcessor
      */
     private function findAllInnermostPlaceholders(string $input): array
     {
-        $prefixLen = strlen(self::ENV_PREFIX);
-        $suffixLen = strlen(self::ENV_SUFFIX);
+        $prefixLen = \strlen(self::ENV_PREFIX);
+        $suffixLen = \strlen(self::ENV_SUFFIX);
 
         // Find all %env( positions
         $positions = [];
@@ -73,12 +83,12 @@ final readonly class StringProcessor
             $offset = $pos + $prefixLen;
         }
 
-        if ($positions === []) {
+        if ([] === $positions) {
             return [];
         }
 
         $result = [];
-        $len = strlen($input);
+        $len = \strlen($input);
 
         foreach ($positions as $startPos) {
             $contentStart = $startPos + $prefixLen;
@@ -87,16 +97,16 @@ final readonly class StringProcessor
 
             while ($i < $len && $depth > 0) {
                 // Check for nested %env(
-                if (substr($input, $i, $prefixLen) === self::ENV_PREFIX) {
-                    $depth++;
+                if (self::ENV_PREFIX === substr($input, $i, $prefixLen)) {
+                    ++$depth;
                     $i += $prefixLen;
                     continue;
                 }
 
                 // Check for )%
-                if (substr($input, $i, $suffixLen) === self::ENV_SUFFIX) {
-                    $depth--;
-                    if ($depth === 0) {
+                if (self::ENV_SUFFIX === substr($input, $i, $suffixLen)) {
+                    --$depth;
+                    if (0 === $depth) {
                         $heap = substr($input, $contentStart, $i - $contentStart);
                         // Only add if this placeholder has no nested %env( inside
                         if (!str_contains($heap, self::ENV_PREFIX)) {
@@ -107,7 +117,7 @@ final readonly class StringProcessor
                     continue;
                 }
 
-                $i++;
+                ++$i;
             }
         }
 

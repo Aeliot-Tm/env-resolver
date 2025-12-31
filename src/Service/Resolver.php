@@ -1,5 +1,15 @@
 <?php
+
 declare(strict_types=1);
+
+/*
+ * This file is part of the Env Resolver project.
+ *
+ * (c) Anatoliy Melnikov <5785276@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Aeliot\EnvResolver\Service;
 
@@ -38,10 +48,10 @@ final readonly class Resolver implements ResolverInterface
                 Modifier::QUERY_STRING => $this->resolveQueryString($value),
                 Modifier::REQUIRE => $this->resolveRequire($step, $value, $heap),
                 Modifier::STR_CSV => $this->resolveCsvString($value, $heap),
-                Modifier::STRING => (string)$value,
-                Modifier::TRIM => trim((string)$value),
+                Modifier::STRING => (string) $value,
+                Modifier::TRIM => trim((string) $value),
                 Modifier::URL => $this->resolveURL($value, $heap),
-                Modifier::URL_ENCODE => urlencode((string)$value),
+                Modifier::URL_ENCODE => urlencode((string) $value),
             };
         }
 
@@ -55,7 +65,7 @@ final readonly class Resolver implements ResolverInterface
             throw new InvalidValueException(\sprintf('Non-scalar base64 (resolved from "%s").', $heap));
         }
         // replace for the handling of URL-safe
-        $value = strtr((string)($step[1] ?? $value), '-_', '+/');
+        $value = strtr((string) ($step[1] ?? $value), '-_', '+/');
         if (preg_match('~[^A-Za-z0-9+/=]~', $value)) {
             throw new InvalidValueException(\sprintf('Invalid base64 (resolved from "%s").', $heap));
         }
@@ -75,10 +85,10 @@ final readonly class Resolver implements ResolverInterface
             );
         }
 
-        return (bool)(
-        filter_var($value, \FILTER_VALIDATE_BOOL)
-            ?: filter_var($value, \FILTER_VALIDATE_INT)
-            ?: filter_var($value, \FILTER_VALIDATE_FLOAT)
+        return (bool) (
+            filter_var($value, \FILTER_VALIDATE_BOOL)
+                ?: filter_var($value, \FILTER_VALIDATE_INT)
+                ?: filter_var($value, \FILTER_VALIDATE_FLOAT)
         );
     }
 
@@ -112,7 +122,7 @@ final readonly class Resolver implements ResolverInterface
             throw new InvalidValueException(\sprintf('Non-scalar csv (resolved from "%s").', $heap));
         }
 
-        return '' === (string)$value ? [] : str_getcsv((string)$value, ',', '"', '');
+        return '' === (string) $value ? [] : str_getcsv((string) $value, ',', '"', '');
     }
 
     private function resolveDirect(array $step, string $heap): string
@@ -163,7 +173,7 @@ final readonly class Resolver implements ResolverInterface
             );
         }
 
-        if (isset($_ENV) && array_key_exists($name, $_ENV)) {
+        if (isset($_ENV) && \array_key_exists($name, $_ENV)) {
             $value = $_ENV[$name];
         } elseif (false === ($value = getenv($name))) {
             throw new EnvFoundException(
@@ -179,7 +189,7 @@ final readonly class Resolver implements ResolverInterface
         $name = $step[1] ?? $value;
         $this->validateFileName($name, $heap);
 
-        $contents = \file_get_contents($name);
+        $contents = file_get_contents($name);
         if (false === $contents) {
             throw new FileNotFoundException(
                 \sprintf('File "%s" not readable (resolved from "%s").', $name, $heap)
@@ -198,7 +208,7 @@ final readonly class Resolver implements ResolverInterface
             );
         }
 
-        return (float)$value;
+        return (float) $value;
     }
 
     private function resolveInt(mixed $value, string $heap): int
@@ -210,7 +220,7 @@ final readonly class Resolver implements ResolverInterface
             );
         }
 
-        return (int)$value;
+        return (int) $value;
     }
 
     private function resolveJson(mixed $value, string $heap): mixed
@@ -275,18 +285,17 @@ final readonly class Resolver implements ResolverInterface
                 \sprintf('Invalid URL in env var: scheme and host expected (resolved from "%s").', $heap)
             );
         }
-        if (('\\' !== \DIRECTORY_SEPARATOR || 'file' !== $params['scheme']) && false !== ($i = strpos(
-                $value,
-                '\\'
-            )) && $i < strcspn($value, '?#')) {
+        if (('\\' !== \DIRECTORY_SEPARATOR || 'file' !== $params['scheme'])
+            && false !== ($i = strpos($value, '\\')) && $i < strcspn($value, '?#')
+        ) {
             throw new InvalidValueException(
                 \sprintf('Invalid URL in env var: backslashes are not allowed (resolved from "%s").', $heap)
             );
         }
-        if (\ord($value[0]) <= 32 || \ord($value[-1]) <= 32 || \strlen($value) !== strcspn(
-                $value,
-                "\r\n\t"
-            )) {
+        if (\ord($value[0]) <= 32
+            || \ord($value[-1]) <= 32
+            || \strlen($value) !== strcspn($value, "\r\n\t")
+        ) {
             throw new InvalidValueException(
                 \sprintf(
                     'Invalid URL in env var: leading/trailing ASCII control characters or whitespaces are not allowed (resolved from "%s")',
