@@ -1,6 +1,4 @@
 {
-    "scan-files": [
-        "bin/validate"
-    ]
+    "scan-files": []
 }
 
