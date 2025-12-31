@@ -43,6 +43,7 @@ final readonly class ThreadBuilder
                 'base64',
                 'float',
                 'int',
+                'json',
                 'not',
             ], true)) {
                 $step[] = $part;

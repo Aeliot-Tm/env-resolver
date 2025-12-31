@@ -90,6 +90,15 @@ final class ResolverTest extends TestCase
             InvalidValueException::class,
             'base64:RESOLVER_TEST_ENV_BASE64_INVALID',
         ];
+
+        yield 'json invalid array with elements from base64 of direct value' => [
+            InvalidValueException::class,
+            'json:base64:direct:WyJhIjoxLCJiIjoyXQ==',
+        ];
+        yield 'json invalid from direct string without quotes' => [
+            InvalidValueException::class,
+            'json:direct:a_string',
+        ];
     }
 
     public static function getDataForTestPositiveFlow(): iterable
@@ -179,6 +188,13 @@ final class ResolverTest extends TestCase
         yield 'int 1 from direct float value 1.1' => [1, 'int:direct:1.1'];
         yield 'int 0 from direct float value' => [0, 'int:direct:0.0'];
         yield 'int 0 from direct float value 0.1 (less then zero)' => [0, 'int:direct:0.1'];
+
+        yield 'json empty array from direct value' => [[], 'json:direct:[]'];
+        yield 'json array with elements from base64 of direct value' => [
+            ['a' => 1, 'b' => 2],
+            'json:base64:direct:eyJhIjoxLCJiIjoyfQ==',
+        ];
+        yield 'json string from direct value' => ['a_string', 'json:direct:"a_string"'];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]
