@@ -21,12 +21,14 @@ final class ThreadBuilderTest extends TestCase
         // Modifier as env name
         yield 'env as env key' => [[['env', 'env']], 'env'];
         yield 'base64 as env key' => [[['env', 'base64']], 'base64'];
+        yield 'bool as env key' => [[['env', 'bool']], 'bool'];
         yield 'const as env key' => [[['env', 'const']], 'const'];
         yield 'direct as env key' => [[['env', 'direct']], 'direct'];
         yield 'file as env key' => [[['env', 'file']], 'file'];
         yield 'float as env key' => [[['env', 'float']], 'float'];
         yield 'int as env key' => [[['env', 'int']], 'int'];
         yield 'json as env key' => [[['env', 'json']], 'json'];
+        yield 'not as env key' => [[['env', 'not']], 'not'];
         yield 'require as env key' => [[['env', 'require']], 'require'];
         yield 'string as env key' => [[['env', 'string']], 'string'];
         yield 'trim as env key' => [[['env', 'trim']], 'trim'];
