@@ -157,75 +157,24 @@ final class ResolverTest extends TestCase
             'const:require:tests/fixtures/Unit/ResolverTest/const_from_require.php',
         ];
 
-        yield 'base64 to empty array string' => [
-            '[]',
-            'base64:RESOLVER_TEST_ENV_BASE64_EMPTY_ARRAY',
-        ];
+        yield 'base64 to empty array string' => ['[]', 'base64:RESOLVER_TEST_ENV_BASE64_EMPTY_ARRAY',];
+        yield 'direct double base64 to empty array string' => ['[]', 'base64:base64:direct:VzEwPQ=='];
 
-        yield 'direct double base64 to empty array string' => [
-            '[]',
-            'base64:base64:direct:VzEwPQ=='
-        ];
+        yield 'bool true from direct int value' => [true, 'bool:direct:1'];
+        yield 'bool false from direct int value' => [false, 'bool:direct:0'];
+        yield 'bool true from direct float value' => [true, 'bool:direct:1.58'];
+        yield 'bool false from direct float value' => [false, 'bool:direct:0.00'];
+        yield 'bool true from direct base64 of int string' => [true, 'bool:base64:direct:MQ=='];
+        yield 'bool false from direct base64 of int string' => [false, 'bool:base64:direct:MA=='];
 
-        yield 'bool true from direct int value' => [
-            true,
-            'bool:direct:1'
-        ];
+        yield 'bool false by not of bool from direct int value' => [false, 'not:bool:direct:1'];
 
-        yield 'bool false from direct int value' => [
-            false,
-            'bool:direct:0'
-        ];
+        yield 'float 0.1 from direct value' => [0.1, 'float:direct:0.1'];
+        yield 'float 0.0 from direct value' => [0.0, 'float:direct:0.0'];
+        yield 'float 1.0 from direct value with tail on zeros' => [1.0, 'float:direct:1.000'];
 
-        yield 'bool true from direct float value' => [
-            true,
-            'bool:direct:1.58'
-        ];
-
-        yield 'bool false from direct float value' => [
-            false,
-            'bool:direct:0.00'
-        ];
-
-        yield 'bool true from direct base64 of int string' => [
-            true,
-            'bool:base64:direct:MQ=='
-        ];
-
-        yield 'bool false from direct base64 of int string' => [
-            false,
-            'bool:base64:direct:MA=='
-        ];
-
-        yield 'bool false by not of bool from direct int value' => [
-            false,
-            'not:bool:direct:1'
-        ];
-
-        yield 'float 0.1 from direct value' => [
-            0.1,
-            'float:direct:0.1'
-        ];
-
-        yield 'float 0.0 from direct value' => [
-            0.0,
-            'float:direct:0.0'
-        ];
-
-        yield 'float 1.0 from direct value with tail on zeros' => [
-            1.0,
-            'float:direct:1.000'
-        ];
-
-        yield 'int 1 from direct value' => [
-            1,
-            'int:direct:1'
-        ];
-
-        yield 'int 0 from direct value' => [
-            0,
-            'int:direct:0'
-        ];
+        yield 'int 1 from direct value' => [1, 'int:direct:1'];
+        yield 'int 0 from direct value' => [0, 'int:direct:0'];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]
