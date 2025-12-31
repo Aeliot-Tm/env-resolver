@@ -292,13 +292,27 @@ final class ResolverTest extends TestCase
         yield 'urlencode value' => ['Data123%21%40-_+%2B', 'urlencode:base64:direct:RGF0YTEyMyFALV8gKw=='];
 
         // Complex mapping
-        yield 'enum in from direct value' => [
+        yield 'enum int from direct value' => [
             OneToFiveEnum::FOUR,
             'enum:Aeliot\EnvResolver\Test\Fixtures\Enum\OneToFiveEnum:int:direct:4',
         ];
         yield 'enum string from direct value' => [
             ABDStringEnum::B,
             'enum:Aeliot\EnvResolver\Test\Fixtures\Enum\ABDStringEnum:direct:b',
+        ];
+
+        // Enum to scalar type casting
+        yield 'int from int-backed enum' => [
+            4,
+            'int:enum:Aeliot\EnvResolver\Test\Fixtures\Enum\OneToFiveEnum:int:direct:4',
+        ];
+        yield 'string from int-backed enum' => [
+            '4',
+            'string:enum:Aeliot\EnvResolver\Test\Fixtures\Enum\OneToFiveEnum:int:direct:4',
+        ];
+        yield 'string from string-backed enum' => [
+            'b',
+            'string:enum:Aeliot\EnvResolver\Test\Fixtures\Enum\ABDStringEnum:direct:b',
         ];
 
         yield 'key int from direct base64 json value' => [

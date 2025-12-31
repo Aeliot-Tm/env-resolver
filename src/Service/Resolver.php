@@ -48,7 +48,7 @@ final readonly class Resolver implements ResolverInterface
                 Modifier::QUERY_STRING => $this->resolveQueryString($value),
                 Modifier::REQUIRE => $this->resolveRequire($step, $value, $heap),
                 Modifier::STR_CSV => $this->resolveCsvString($value, $heap),
-                Modifier::STRING => (string) $value,
+                Modifier::STRING => $this->resolveString($value),
                 Modifier::TRIM => trim((string) $value),
                 Modifier::URL => $this->resolveURL($value, $heap),
                 Modifier::URL_ENCODE => urlencode((string) $value),
@@ -201,6 +201,10 @@ final readonly class Resolver implements ResolverInterface
 
     private function resolveFloat(mixed $value, string $heap): float
     {
+        if ($value instanceof \BackedEnum) {
+            $value = $value->value;
+        }
+
         $value = filter_var($value, \FILTER_VALIDATE_FLOAT);
         if (false === $value) {
             throw new InvalidValueException(
@@ -213,10 +217,14 @@ final readonly class Resolver implements ResolverInterface
 
     private function resolveInt(mixed $value, string $heap): int
     {
+        if ($value instanceof \BackedEnum) {
+            $value = $value->value;
+        }
+
         $value = filter_var($value, \FILTER_VALIDATE_INT) ?: filter_var($value, \FILTER_VALIDATE_FLOAT);
         if (false === $value) {
             throw new InvalidValueException(
-                \sprintf('Non-numeric env var cannot be cast to float (resolved from "%s").', $heap)
+                \sprintf('Non-numeric env var cannot be cast to int (resolved from "%s").', $heap)
             );
         }
 
@@ -272,6 +280,11 @@ final readonly class Resolver implements ResolverInterface
         $this->validateFileName($name, $heap);
 
         return require $name;
+    }
+
+    private function resolveString(mixed $value): string
+    {
+        return (string) ($value instanceof \BackedEnum ? $value->value : $value);
     }
 
     private function resolveURL(mixed $value, string $heap): mixed
