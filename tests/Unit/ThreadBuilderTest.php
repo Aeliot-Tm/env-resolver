@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Aeliot\EnvResolver\Test\Unit;
 
+use Aeliot\EnvResolver\Exception\InvalidHeapException;
 use Aeliot\EnvResolver\ThreadBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -82,9 +83,12 @@ final class ThreadBuilderTest extends TestCase
         yield 'int of env' => [[['env', 'MY_ENV'], ['int']], 'int:MY_ENV'];
         yield 'json of env' => [[['env', 'MY_ENV'], ['json']], 'json:MY_ENV'];
         yield 'double json of env' => [[['env', 'MY_ENV'], ['json'], ['json']], 'json:json:MY_ENV'];
-        yield 'key of env' => [[['env', 'MY_ENV'], ['key','a']], 'key:a:MY_ENV'];
-        yield 'key int of env' => [[['env', 'MY_ENV'], ['key','1']], 'key:1:MY_ENV'];
-        yield 'key nested of env' => [[['env', 'MY_ENV'], ['key','parent'], ['key','child']], 'key:child:key:parent:MY_ENV'];
+        yield 'key of env' => [[['env', 'MY_ENV'], ['key', 'a']], 'key:a:MY_ENV'];
+        yield 'key int of env' => [[['env', 'MY_ENV'], ['key', '1']], 'key:1:MY_ENV'];
+        yield 'key nested of env' => [
+            [['env', 'MY_ENV'], ['key', 'parent'], ['key', 'child']],
+            'key:child:key:parent:MY_ENV',
+        ];
         yield 'query_string of env' => [[['env', 'MY_ENV'], ['query_string']], 'query_string:MY_ENV'];
         yield 'string of env' => [[['env', 'MY_ENV'], ['string']], 'string:MY_ENV'];
         yield 'trim of env' => [[['env', 'MY_ENV'], ['trim']], 'trim:MY_ENV'];
@@ -93,7 +97,10 @@ final class ThreadBuilderTest extends TestCase
 
         // Direct modifier
         yield 'direct base64 value' => [[['direct', 'W10=']], 'direct:W10='];
-        yield 'direct base64 value with double base64' => [[['direct', 'VzEwPQ=='], ['base64'], ['base64']], 'base64:base64:direct:VzEwPQ=='];
+        yield 'direct base64 value with double base64' => [
+            [['direct', 'VzEwPQ=='], ['base64'], ['base64']],
+            'base64:base64:direct:VzEwPQ==',
+        ];
         yield 'direct float value' => [[['direct', '100.005']], 'direct:100.005'];
         yield 'direct int value' => [[['direct', '100']], 'direct:100'];
         yield 'direct string value' => [[['direct', 'some_string']], 'direct:some_string'];
@@ -123,9 +130,26 @@ final class ThreadBuilderTest extends TestCase
         ];
     }
 
+    public static function getDataForTestRuntimeException(): iterable
+    {
+        yield 'direct not penultimate' => [InvalidHeapException::class, 'direct:env:MY_ENV'];
+        yield 'key without supporter' => [InvalidHeapException::class, 'key:MY_ENV'];
+        yield 'key without supporter with explicit env' => [InvalidHeapException::class, 'key:env:MY_ENV'];
+        yield 'enum without supporter' => [InvalidHeapException::class, 'enum:MY_ENV'];
+        yield 'enum without supporter with explicit env' => [InvalidHeapException::class, 'enum:env:MY_ENV'];
+        yield 'not supported modifier' => [InvalidHeapException::class, 'not_supported_modifier:env:MY_ENV'];
+    }
+
     #[DataProvider('getDataForTestPositiveFlow')]
     public function testPositiveFlow(array $steps, string $heap): void
     {
         self::assertSame($steps, (new ThreadBuilder())->getSteps($heap));
+    }
+
+    #[DataProvider('getDataForTestRuntimeException')]
+    public function testRuntimeException(string $expected, string $heap): void
+    {
+        $this->expectException($expected);
+        (new ThreadBuilder())->getSteps($heap);
     }
 }
