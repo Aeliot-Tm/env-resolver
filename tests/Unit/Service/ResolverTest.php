@@ -41,7 +41,24 @@ final class ResolverTest extends TestCase
         $_ENV['RESOLVER_TEST_ENV_FILE_WITH_CONTENT'] = 'tests/fixtures/Unit/ResolverTest/file_with_content.txt';
         $_ENV['RESOLVER_TEST_ENV_REQUIRE_WITH_CONTENT'] = 'tests/fixtures/Unit/ResolverTest/require_with_content.php';
         $_ENV['RESOLVER_TEST_ENV_UNDEFINED_DONOR'] = 'RESOLVER_TEST_ENV_UNDEFINED';
-        putenv("RESOLVER_TEST_ENV_PUTENV=ENV_PUTENV");
+        putenv('RESOLVER_TEST_ENV_PUTENV=ENV_PUTENV');
+    }
+
+    protected function tearDown(): void
+    {
+        unset(
+            $_ENV['RESOLVER_TEST_ENV_A'],
+            $_ENV['RESOLVER_TEST_ENV_BASE64_EMPTY_ARRAY'],
+            $_ENV['RESOLVER_TEST_ENV_BASE64_INVALID'],
+            $_ENV['RESOLVER_TEST_ENV_FROM_FILE'],
+            $_ENV['RESOLVER_TEST_ENV_FROM_REQUIRE'],
+            $_ENV['RESOLVER_TEST_ENV_NAME_DONOR'],
+            $_ENV['RESOLVER_TEST_ENV_RESULTING'],
+            $_ENV['RESOLVER_TEST_ENV_FILE_WITH_CONTENT'],
+            $_ENV['RESOLVER_TEST_ENV_REQUIRE_WITH_CONTENT'],
+            $_ENV['RESOLVER_TEST_ENV_UNDEFINED_DONOR']
+        );
+        putenv('RESOLVER_TEST_ENV_PUTENV');
     }
 
     public static function getDataForTestRuntimeException(): iterable
