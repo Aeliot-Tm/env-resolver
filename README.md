@@ -1,5 +1,8 @@
 # Env Resolver
 
+[![Automated Testing](https://github.com/aeliot/env-resolver/actions/workflows/automated_testing.yml/badge.svg)](https://github.com/aeliot/env-resolver/actions/workflows/automated_testing.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A powerful PHP library for resolving environment variables, constants, files, and other data sources using a flexible chain of modifiers. Inspired by Symfony's env processors but works standalone without framework dependencies.
 
 ## Features
