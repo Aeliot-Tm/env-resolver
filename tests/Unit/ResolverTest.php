@@ -5,9 +5,13 @@ namespace Aeliot\EnvResolver\Test\Unit;
 
 use Aeliot\EnvResolver\Exception\EnvFoundException;
 use Aeliot\EnvResolver\Exception\FileNotFoundException;
+use Aeliot\EnvResolver\Exception\InvalidEnumException;
 use Aeliot\EnvResolver\Exception\InvalidNameException;
 use Aeliot\EnvResolver\Exception\InvalidValueException;
+use Aeliot\EnvResolver\Exception\NotSupportedEnumCaseException;
 use Aeliot\EnvResolver\Resolver;
+use Aeliot\EnvResolver\Test\Fixtures\Enum\ABDStringEnum;
+use Aeliot\EnvResolver\Test\Fixtures\Enum\OneToFiveEnum;
 use Aeliot\EnvResolver\ThreadBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -89,6 +93,26 @@ final class ResolverTest extends TestCase
         yield 'base64 invalid' => [
             InvalidValueException::class,
             'base64:RESOLVER_TEST_ENV_BASE64_INVALID',
+        ];
+
+        yield 'enum not exist direct value' => [
+            InvalidEnumException::class,
+            'enum:MyEnum:direct:a',
+        ];
+
+        yield 'enum unavailable for float value' => [
+            InvalidValueException::class,
+            'enum:Aeliot\EnvResolver\Test\Fixtures\Enum\OneToFiveEnum:float:direct:4',
+        ];
+
+        yield 'enum not supported case' => [
+            NotSupportedEnumCaseException::class,
+            'enum:Aeliot\EnvResolver\Test\Fixtures\Enum\OneToFiveEnum:int:direct:6',
+        ];
+
+        yield 'enum unavailable for not backed' => [
+            InvalidEnumException::class,
+            'enum:Aeliot\EnvResolver\Test\Fixtures\Enum\NotBackedEnum:direct:FOUR',
         ];
 
         yield 'json invalid array with elements from base64 of direct value' => [
@@ -212,6 +236,17 @@ final class ResolverTest extends TestCase
 
         yield 'trim value' => ['a', 'trim:base64:direct:ICBhIA=='];
         yield 'urlencode value' => ['Data123%21%40-_+%2B', 'urlencode:base64:direct:RGF0YTEyMyFALV8gKw=='];
+
+        // Complex mapping
+        yield 'enum in from direct value' => [
+            OneToFiveEnum::FOUR,
+            'enum:Aeliot\EnvResolver\Test\Fixtures\Enum\OneToFiveEnum:int:direct:4',
+        ];
+        yield 'enum string from direct value' => [
+            ABDStringEnum::B,
+            'enum:Aeliot\EnvResolver\Test\Fixtures\Enum\ABDStringEnum:direct:b',
+        ];
+
         yield 'key int from direct base64 json value' => [
             'Nancy Adams',
             // ["John Doe","Nancy Adams"]

@@ -21,6 +21,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Aeliot\\EnvResolver\\Test\\Fixtures\\Enum\\": "tests/fixtures/Enum",
             "Aeliot\\EnvResolver\\Test\\Unit\\": "tests/Unit"
         }
     },

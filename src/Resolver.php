@@ -5,9 +5,11 @@ namespace Aeliot\EnvResolver;
 
 use Aeliot\EnvResolver\Exception\EnvFoundException;
 use Aeliot\EnvResolver\Exception\FileNotFoundException;
+use Aeliot\EnvResolver\Exception\InvalidEnumException;
 use Aeliot\EnvResolver\Exception\InvalidNameException;
 use Aeliot\EnvResolver\Exception\InvalidValueException;
 use Aeliot\EnvResolver\Exception\KeyFoundException;
+use Aeliot\EnvResolver\Exception\NotSupportedEnumCaseException;
 
 final readonly class Resolver
 {
@@ -82,6 +84,26 @@ final readonly class Resolver
                     }
                     $value = $step[1];
                     break;
+                case 'enum':
+                    if (!(\is_string($value) || \is_int($value))) {
+                        throw new InvalidValueException(
+                            \sprintf('Resolved value did not result in a string or int (resolved from "%s").', $heap)
+                        );
+                    }
+                    $backedEnumClassName = $step[1];
+                    if (!is_subclass_of($backedEnumClassName, \BackedEnum::class)) {
+                        throw new InvalidEnumException(
+                            \sprintf('"%s" is not a "%s".', $backedEnumClassName, \BackedEnum::class)
+                        );
+                    }
+
+                    $value = $backedEnumClassName::tryFrom($value);
+                    if (null === $value) {
+                        throw new NotSupportedEnumCaseException(
+                            \sprintf('Enum value "%s" is not backed by "%s".', $value, $backedEnumClassName)
+                        );
+                    }
+                    break;
                 case 'env':
                     $name = $step[1] ?? $value;
                     if (!\is_scalar($name)) {
@@ -153,11 +175,15 @@ final readonly class Resolver
                     break;
                 case 'key':
                     if (!\is_array($value)) {
-                        throw new InvalidValueException(\sprintf('Cannot get value by key from not array value (resolved from "%s")', $heap));
+                        throw new InvalidValueException(
+                            \sprintf('Cannot get value by key from not array value (resolved from "%s")', $heap)
+                        );
                     }
                     $key = $step[1];
                     if (!\array_key_exists($key, $value)) {
-                        throw new KeyFoundException(\sprintf('Key "%s" not found in %s (resolved from "%s").', $key, json_encode($value), $heap));
+                        throw new KeyFoundException(
+                            \sprintf('Key "%s" not found in %s (resolved from "%s").', $key, json_encode($value), $heap)
+                        );
                     }
 
                     $value = $value[$key];

@@ -25,6 +25,7 @@ final class ThreadBuilderTest extends TestCase
         yield 'strcsv as env key' => [[['env', 'strcsv']], 'strcsv'];
         yield 'const as env key' => [[['env', 'const']], 'const'];
         yield 'direct as env key' => [[['env', 'direct']], 'direct'];
+        yield 'enum as env key' => [[['env', 'enum']], 'enum'];
         yield 'file as env key' => [[['env', 'file']], 'file'];
         yield 'float as env key' => [[['env', 'float']], 'float'];
         yield 'int as env key' => [[['env', 'int']], 'int'];
@@ -74,6 +75,7 @@ final class ThreadBuilderTest extends TestCase
         yield 'double not from bool' => [[['env', 'MY_ENV'], ['not'], ['not']], 'not:not:MY_ENV'];
         yield 'not from bool of env' => [[['env', 'MY_ENV'], ['bool'], ['not']], 'not:bool:MY_ENV'];
         yield 'strcsv of env' => [[['env', 'MY_ENV'], ['strcsv']], 'strcsv:MY_ENV'];
+        yield 'enum of env' => [[['env', 'MY_ENV'], ['enum', 'MyEnum']], 'enum:MyEnum:MY_ENV'];
         yield 'float of env' => [[['env', 'MY_ENV'], ['float']], 'float:MY_ENV'];
         yield 'int of env' => [[['env', 'MY_ENV'], ['int']], 'int:MY_ENV'];
         yield 'json of env' => [[['env', 'MY_ENV'], ['json']], 'json:MY_ENV'];
