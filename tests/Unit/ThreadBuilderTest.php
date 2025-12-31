@@ -28,6 +28,7 @@ final class ThreadBuilderTest extends TestCase
         yield 'int as env key' => [[['env', 'int']], 'int'];
         yield 'json as env key' => [[['env', 'json']], 'json'];
         yield 'require as env key' => [[['env', 'require']], 'require'];
+        yield 'string as env key' => [[['env', 'string']], 'string'];
 
         // Constant processor
         yield 'simple const' => [[['const', 'MY_ENV']], 'const:MY_ENV'];
@@ -70,6 +71,7 @@ final class ThreadBuilderTest extends TestCase
         yield 'int of env' => [[['env', 'MY_ENV'], ['int']], 'int:MY_ENV'];
         yield 'json of env' => [[['env', 'MY_ENV'], ['json']], 'json:MY_ENV'];
         yield 'double json of env' => [[['env', 'MY_ENV'], ['json'], ['json']], 'json:json:MY_ENV'];
+        yield 'string of env' => [[['env', 'MY_ENV'], ['string']], 'string:MY_ENV'];
 
         // Direct modifier
         yield 'direct base64 value' => [[['direct', 'W10=']], 'direct:W10='];
@@ -84,6 +86,23 @@ final class ThreadBuilderTest extends TestCase
         yield 'float from direct float value' => [[['direct', '0.1'], ['float']], 'float:direct:0.1'];
         yield 'int from direct int value' => [[['direct', '1'], ['int']], 'int:direct:1'];
         yield 'json empty array from direct value' => [[['direct', '[]'], ['json']], 'json:direct:[]'];
+        yield 'string from direct value' => [[['direct', 'a_string'], ['string']], 'string:direct:a_string'];
+        yield 'string from floated direct value with tail on zeros' => [
+            [['direct', '1.000'], ['float'], ['string']],
+            'string:float:direct:1.000',
+        ];
+        yield 'string from floated direct int value' => [
+            [['direct', '1'], ['float'], ['string']],
+            'string:float:direct:1',
+        ];
+        yield 'string from inted direct value with tail on zeros' => [
+            [['direct', '1.000'], ['int'], ['string']],
+            'string:int:direct:1.000',
+        ];
+        yield 'string from inted direct int value' => [
+            [['direct', '1'], ['int'], ['string']],
+            'string:int:direct:1',
+        ];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]

@@ -195,6 +195,16 @@ final class ResolverTest extends TestCase
             'json:base64:direct:eyJhIjoxLCJiIjoyfQ==',
         ];
         yield 'json string from direct value' => ['a_string', 'json:direct:"a_string"'];
+
+        yield 'string 1 from direct int value' => ['1', 'string:direct:1'];
+        yield 'string 0 from direct int value' => ['0', 'string:direct:0'];
+        yield 'string 0.1 from direct float value' => ['0.1', 'string:direct:0.1'];
+        yield 'string 0.0 from direct float value' => ['0.0', 'string:direct:0.0'];
+        yield 'string 1.000 from direct value with tail on zeros' => ['1.000', 'string:direct:1.000'];
+        yield 'string 1.01 from floated direct value with tail on zeros' => ['1.01', 'string:float:direct:1.010'];
+        yield 'string 1 from floated direct value with tail on zeros' => ['1', 'string:float:direct:1.000'];
+        yield 'string 1 from floated direct int value' => ['1', 'string:float:direct:1'];
+        yield 'string 0 from inted direct float value' => ['0', 'string:int:direct:0.0'];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]

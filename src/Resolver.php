@@ -148,6 +148,9 @@ final readonly class Resolver
                     // TODO: consider checking if not array?
 
                     break;
+                case 'string':
+                    $value = (string)$value;
+                    break;
             }
         }
 
