@@ -172,9 +172,13 @@ final class ResolverTest extends TestCase
         yield 'float 0.1 from direct value' => [0.1, 'float:direct:0.1'];
         yield 'float 0.0 from direct value' => [0.0, 'float:direct:0.0'];
         yield 'float 1.0 from direct value with tail on zeros' => [1.0, 'float:direct:1.000'];
+        yield 'float 1.0 from direct int value' => [1.0, 'float:direct:1'];
 
         yield 'int 1 from direct value' => [1, 'int:direct:1'];
         yield 'int 0 from direct value' => [0, 'int:direct:0'];
+        yield 'int 1 from direct float value 1.1' => [1, 'int:direct:1.1'];
+        yield 'int 0 from direct float value' => [0, 'int:direct:0.0'];
+        yield 'int 0 from direct float value 0.1 (less then zero)' => [0, 'int:direct:0.1'];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]
