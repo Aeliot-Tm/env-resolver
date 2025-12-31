@@ -24,6 +24,8 @@ final class ThreadBuilderTest extends TestCase
         yield 'const as env key' => [[['env', 'const']], 'const'];
         yield 'direct as env key' => [[['env', 'direct']], 'direct'];
         yield 'file as env key' => [[['env', 'file']], 'file'];
+        yield 'float as env key' => [[['env', 'float']], 'float'];
+        yield 'int as env key' => [[['env', 'int']], 'int'];
         yield 'require as env key' => [[['env', 'require']], 'require'];
 
         // Constant processor
@@ -63,6 +65,8 @@ final class ThreadBuilderTest extends TestCase
         yield 'not of env explicitly' => [[['env', 'MY_ENV'], ['not']], 'not:env:MY_ENV'];
         yield 'double not from bool' => [[['env', 'MY_ENV'], ['not'], ['not']], 'not:not:MY_ENV'];
         yield 'not from bool of env' => [[['env', 'MY_ENV'], ['bool'], ['not']], 'not:bool:MY_ENV'];
+        yield 'float of env' => [[['env', 'MY_ENV'], ['float']], 'float:MY_ENV'];
+        yield 'int of env' => [[['env', 'MY_ENV'], ['int']], 'int:MY_ENV'];
 
         // Direct modifier
         yield 'direct base64 value' => [[['direct', 'W10=']], 'direct:W10='];
@@ -73,6 +77,8 @@ final class ThreadBuilderTest extends TestCase
 
         yield 'bool from direct float value' => [[['direct', '100.005'], ['bool']], 'bool:direct:100.005'];
         yield 'bool from direct int value' => [[['direct', '100'], ['bool']], 'bool:direct:100'];
+        yield 'float from direct float value' => [[['direct', '0.1'], ['float']], 'float:direct:0.1'];
+        yield 'int from direct int value' => [[['direct', '1'], ['int']], 'int:direct:1'];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]

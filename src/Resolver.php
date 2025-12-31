@@ -123,6 +123,23 @@ final readonly class Resolver
                     $value = 'file' === $modifier ? \file_get_contents($name) : require $name;
 
                     break;
+                case 'float':
+                    $value = filter_var($value, \FILTER_VALIDATE_FLOAT);
+                    if (false === $value) {
+                        throw new InvalidValueException(
+                            \sprintf('Non-numeric env var cannot be cast to float (resolved from "%s").', $heap)
+                        );
+                    }
+                    break;
+                case 'int':
+                    $value = filter_var($value, \FILTER_VALIDATE_INT) ?: filter_var($value, \FILTER_VALIDATE_FLOAT);
+                    if (false === $value) {
+                        throw new InvalidValueException(
+                            \sprintf('Non-numeric env var cannot be cast to float (resolved from "%s").', $heap)
+                        );
+                    }
+                    $value = (int) $value;
+                    break;
             }
         }
 
