@@ -224,6 +224,16 @@ final class ResolverTest extends TestCase
         ];
         yield 'json string from direct value' => ['a_string', 'json:direct:"a_string"'];
 
+        yield 'query_string from url' => [
+            ['param' => 'a'],
+            // http://example.com?param=a
+            'query_string:base64:direct:aHR0cDovL2V4YW1wbGUuY29tP3BhcmFtPWE=',
+        ];
+        // param=a
+        yield 'query_string explicitly' => [['param' => 'a'], 'query_string:base64:direct:cGFyYW09YQ=='];
+        // http://example.com
+        yield 'query_string from url without query' => [[], 'query_string:base64:direct:aHR0cDovL2V4YW1wbGUuY29t'];
+
         yield 'string 1 from direct int value' => ['1', 'string:direct:1'];
         yield 'string 0 from direct int value' => ['0', 'string:direct:0'];
         yield 'string 0.1 from direct float value' => ['0.1', 'string:direct:0.1'];

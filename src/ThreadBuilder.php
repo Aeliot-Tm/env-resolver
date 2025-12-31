@@ -45,6 +45,7 @@ final readonly class ThreadBuilder
                 'int',
                 'json',
                 'not',
+                'query_string',
                 'strcsv',
                 'string',
                 'trim',

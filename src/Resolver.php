@@ -188,6 +188,11 @@ final readonly class Resolver
 
                     $value = $value[$key];
                     break;
+                case 'query_string':
+                    $queryString = parse_url($value, \PHP_URL_QUERY) ?: (parse_url($value, \PHP_URL_SCHEME) ? '' : $value);
+                    parse_str($queryString, $result);
+                    $value = $result;
+                    break;
                 case 'strcsv':
                     if (!\is_scalar($value)) {
                         throw new InvalidNameException(\sprintf('Non-scalar csv (resolved from "%s").', $heap));

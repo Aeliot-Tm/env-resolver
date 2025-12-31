@@ -33,6 +33,7 @@ final class ThreadBuilderTest extends TestCase
         yield 'key as env key' => [[['env', 'key']], 'key'];
         yield 'not as env key' => [[['env', 'not']], 'not'];
         yield 'require as env key' => [[['env', 'require']], 'require'];
+        yield 'query_string as env key' => [[['env', 'query_string']], 'query_string'];
         yield 'string as env key' => [[['env', 'string']], 'string'];
         yield 'trim as env key' => [[['env', 'trim']], 'trim'];
         yield 'urlencode as env key' => [[['env', 'urlencode']], 'urlencode'];
@@ -83,6 +84,7 @@ final class ThreadBuilderTest extends TestCase
         yield 'key of env' => [[['env', 'MY_ENV'], ['key','a']], 'key:a:MY_ENV'];
         yield 'key int of env' => [[['env', 'MY_ENV'], ['key','1']], 'key:1:MY_ENV'];
         yield 'key nested of env' => [[['env', 'MY_ENV'], ['key','parent'], ['key','child']], 'key:child:key:parent:MY_ENV'];
+        yield 'query_string of env' => [[['env', 'MY_ENV'], ['query_string']], 'query_string:MY_ENV'];
         yield 'string of env' => [[['env', 'MY_ENV'], ['string']], 'string:MY_ENV'];
         yield 'trim of env' => [[['env', 'MY_ENV'], ['trim']], 'trim:MY_ENV'];
         yield 'urlencode of env' => [[['env', 'MY_ENV'], ['urlencode']], 'urlencode:MY_ENV'];
