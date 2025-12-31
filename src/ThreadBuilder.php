@@ -49,6 +49,7 @@ final readonly class ThreadBuilder
                 'strcsv',
                 'string',
                 'trim',
+                'url',
                 'urlencode',
             ], true)) {
                 $step[] = $part;

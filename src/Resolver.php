@@ -206,6 +206,52 @@ final readonly class Resolver
                 case 'trim':
                     $value = trim((string)$value);
                     break;
+                case 'url':
+                    $params = parse_url($value);
+                    if (false === $params) {
+                        throw new InvalidValueException(\sprintf('Invalid URL in env var (resolved from "%s")', $heap));
+                    }
+                    if (!isset($params['scheme'], $params['host'])) {
+                        throw new InvalidValueException(
+                            \sprintf('Invalid URL in env var: scheme and host expected (resolved from "%s").', $heap)
+                        );
+                    }
+                    if (('\\' !== \DIRECTORY_SEPARATOR || 'file' !== $params['scheme']) && false !== ($i = strpos(
+                            $value,
+                            '\\'
+                        )) && $i < strcspn($value, '?#')) {
+                        throw new InvalidValueException(
+                            \sprintf('Invalid URL in env var: backslashes are not allowed (resolved from "%s").', $heap)
+                        );
+                    }
+                    if (\ord($value[0]) <= 32 || \ord($value[-1]) <= 32 || \strlen($value) !== strcspn(
+                            $value,
+                            "\r\n\t"
+                        )) {
+                        throw new InvalidValueException(
+                            \sprintf(
+                                'Invalid URL in env var: leading/trailing ASCII control characters or whitespaces are not allowed (resolved from "%s")',
+                                $heap
+                            )
+                        );
+                    }
+                    $params += [
+                        'port' => null,
+                        'user' => null,
+                        'pass' => null,
+                        'path' => null,
+                        'query' => null,
+                        'fragment' => null,
+                    ];
+
+                    $params['user'] = null !== $params['user'] ? rawurldecode($params['user']) : null;
+                    $params['pass'] = null !== $params['pass'] ? rawurldecode($params['pass']) : null;
+
+                    // remove the '/' separator
+                    $params['path'] = '/' === ($params['path'] ?? '/') ? '' : substr($params['path'], 1);
+
+                    $value = $params;
+                    break;
                 case 'urlencode':
                     $value = urlencode((string)$value);
                     break;

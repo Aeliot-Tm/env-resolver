@@ -36,6 +36,7 @@ final class ThreadBuilderTest extends TestCase
         yield 'query_string as env key' => [[['env', 'query_string']], 'query_string'];
         yield 'string as env key' => [[['env', 'string']], 'string'];
         yield 'trim as env key' => [[['env', 'trim']], 'trim'];
+        yield 'url as env key' => [[['env', 'url']], 'url'];
         yield 'urlencode as env key' => [[['env', 'urlencode']], 'urlencode'];
 
         // Constant processor
@@ -87,6 +88,7 @@ final class ThreadBuilderTest extends TestCase
         yield 'query_string of env' => [[['env', 'MY_ENV'], ['query_string']], 'query_string:MY_ENV'];
         yield 'string of env' => [[['env', 'MY_ENV'], ['string']], 'string:MY_ENV'];
         yield 'trim of env' => [[['env', 'MY_ENV'], ['trim']], 'trim:MY_ENV'];
+        yield 'url of env' => [[['env', 'MY_ENV'], ['url']], 'url:MY_ENV'];
         yield 'urlencode of env' => [[['env', 'MY_ENV'], ['urlencode']], 'urlencode:MY_ENV'];
 
         // Direct modifier

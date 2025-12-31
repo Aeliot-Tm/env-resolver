@@ -245,6 +245,20 @@ final class ResolverTest extends TestCase
         yield 'string 0 from inted direct float value' => ['0', 'string:int:direct:0.0'];
 
         yield 'trim value' => ['a', 'trim:base64:direct:ICBhIA=='];
+        yield 'url value' => [
+            [
+                'scheme' => 'http',
+                'host' => 'hostname',
+                'port' => 9090,
+                'user' => 'username',
+                'pass' => 'password',
+                'path' => 'path',
+                'query' => 'arg=value',
+                'fragment' => 'anchor',
+            ],
+            //http://username:password@hostname:9090/path?arg=value#anchor
+            'url:base64:direct:aHR0cDovL3VzZXJuYW1lOnBhc3N3b3JkQGhvc3RuYW1lOjkwOTAvcGF0aD9hcmc9dmFsdWUjYW5jaG9y'
+        ];
         yield 'urlencode value' => ['Data123%21%40-_+%2B', 'urlencode:base64:direct:RGF0YTEyMyFALV8gKw=='];
 
         // Complex mapping
