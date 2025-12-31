@@ -138,12 +138,14 @@ final readonly class Resolver
                             \sprintf('Non-numeric env var cannot be cast to float (resolved from "%s").', $heap)
                         );
                     }
-                    $value = (int) $value;
+                    $value = (int)$value;
                     break;
                 case 'json':
                     $value = json_decode($value, true);
                     if (\JSON_ERROR_NONE !== json_last_error()) {
-                        throw new InvalidValueException(\sprintf('Invalid JSON "%s" (resolved from "%s")', json_last_error_msg(), $heap));
+                        throw new InvalidValueException(
+                            \sprintf('Invalid JSON "%s" (resolved from "%s")', json_last_error_msg(), $heap)
+                        );
                     }
                     // TODO: consider checking if not array?
 
