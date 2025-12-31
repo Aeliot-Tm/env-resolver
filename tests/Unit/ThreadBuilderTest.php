@@ -56,6 +56,13 @@ final class ThreadBuilderTest extends TestCase
             [['env', 'MY_ENV'], ['base64'], ['base64']],
             'base64:base64:env:MY_ENV',
         ];
+        yield 'bool of env' => [[['env', 'MY_ENV'], ['bool']], 'bool:MY_ENV'];
+        yield 'bool of env explicitly' => [[['env', 'MY_ENV'], ['bool']], 'bool:env:MY_ENV'];
+        yield 'double bool from bool' => [[['env', 'MY_ENV'], ['bool'], ['bool']], 'bool:bool:MY_ENV'];
+        yield 'not of env' => [[['env', 'MY_ENV'], ['not']], 'not:MY_ENV'];
+        yield 'not of env explicitly' => [[['env', 'MY_ENV'], ['not']], 'not:env:MY_ENV'];
+        yield 'double not from bool' => [[['env', 'MY_ENV'], ['not'], ['not']], 'not:not:MY_ENV'];
+        yield 'not from bool of env' => [[['env', 'MY_ENV'], ['bool'], ['not']], 'not:bool:MY_ENV'];
 
         // Direct modifier
         yield 'direct base64 value' => [[['direct', 'W10=']], 'direct:W10='];
@@ -63,6 +70,9 @@ final class ThreadBuilderTest extends TestCase
         yield 'direct float value' => [[['direct', '100.005']], 'direct:100.005'];
         yield 'direct int value' => [[['direct', '100']], 'direct:100'];
         yield 'direct string value' => [[['direct', 'some_string']], 'direct:some_string'];
+
+        yield 'bool from direct float value' => [[['direct', '100.005'], ['bool']], 'bool:direct:100.005'];
+        yield 'bool from direct int value' => [[['direct', '100'], ['bool']], 'bool:direct:100'];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]

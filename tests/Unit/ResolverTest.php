@@ -166,6 +166,41 @@ final class ResolverTest extends TestCase
             '[]',
             'base64:base64:direct:VzEwPQ=='
         ];
+
+        yield 'bool true from direct int value' => [
+            true,
+            'bool:direct:1'
+        ];
+
+        yield 'bool false from direct int value' => [
+            false,
+            'bool:direct:0'
+        ];
+
+        yield 'bool true from direct float value' => [
+            true,
+            'bool:direct:1.58'
+        ];
+
+        yield 'bool false from direct float value' => [
+            false,
+            'bool:direct:0.00'
+        ];
+
+        yield 'bool true from direct base64 of int string' => [
+            true,
+            'bool:base64:direct:MQ=='
+        ];
+
+        yield 'bool false from direct base64 of int string' => [
+            false,
+            'bool:base64:direct:MA=='
+        ];
+
+        yield 'bool false by not of bool from direct int value' => [
+            false,
+            'not:bool:direct:1'
+        ];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]

@@ -36,6 +36,24 @@ final readonly class Resolver
                         throw new InvalidValueException(\sprintf('Cannot decode base64 (resolved from "%s").', $heap));
                     }
                     break;
+                case 'bool':
+                case 'not':
+                    if (1 < \count($step)) {
+                        throw new InvalidValueException(
+                            \sprintf('Undefined direct value (resolved from "%s").', $heap)
+                        );
+                    }
+                    $value = (bool)(
+                    filter_var($value, \FILTER_VALIDATE_BOOL)
+                        ?: filter_var($value, \FILTER_VALIDATE_INT)
+                        ?: filter_var($value, \FILTER_VALIDATE_FLOAT)
+                    );
+
+                    if ('not' === $modifier) {
+                        $value = !$value;
+                    }
+
+                    break;
                 case 'const':
                     $name = $step[1] ?? $value;
                     if (!\is_scalar($name)) {

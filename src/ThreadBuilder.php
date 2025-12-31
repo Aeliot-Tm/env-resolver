@@ -39,7 +39,9 @@ final readonly class ThreadBuilder
             }
 
             if (in_array($part, [
+                'bool',
                 'base64',
+                'not',
             ], true)) {
                 $step[] = $part;
             }
