@@ -45,6 +45,7 @@ final readonly class ThreadBuilder
                 'int',
                 'json',
                 'not',
+                'strcsv',
                 'string',
                 'trim',
                 'urlencode',

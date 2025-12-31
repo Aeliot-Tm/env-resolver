@@ -177,6 +177,10 @@ final class ResolverTest extends TestCase
         yield 'bool false from direct base64 of int string' => [false, 'bool:base64:direct:MA=='];
 
         yield 'bool false by not of bool from direct int value' => [false, 'not:bool:direct:1'];
+        yield 'csv string from direct base64 value' => [
+            ['John Doe','Nancy Adams'],
+            'strcsv:base64:direct:IkpvaG4gRG9lIiwiTmFuY3kgQWRhbXMi',
+        ];
 
         yield 'float 0.1 from direct value' => [0.1, 'float:direct:0.1'];
         yield 'float 0.0 from direct value' => [0.0, 'float:direct:0.0'];

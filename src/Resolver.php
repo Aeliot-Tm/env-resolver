@@ -150,6 +150,13 @@ final readonly class Resolver
                     // TODO: consider checking if not array?
 
                     break;
+                case 'strcsv':
+                    if (!\is_scalar($value)) {
+                        throw new InvalidNameException(\sprintf('Non-scalar csv (resolved from "%s").', $heap));
+                    }
+
+                    $value = '' === (string)$value ? [] : str_getcsv((string)$value, ',', '"', '');
+                    break;
                 case 'string':
                     $value = (string)$value;
                     break;
