@@ -22,65 +22,27 @@ final readonly class Resolver
         $value = null;
         $steps = $this->threadBuilder->getSteps($heap);
         foreach ($steps as $step) {
-            switch ($step[0]) {
-                case 'base64':
-                    $value = $this->resolveBase64($step, $value, $heap);
-                    break;
-                case 'bool':
-                    $value = $this->resolveBool($step, $value, $heap);
-                    break;
-                case 'const':
-                    $value = $this->resolveConst($step, $value, $heap);
-                    break;
-                case 'direct':
-                    $value = $this->resolveDirect($step, $heap);
-                    break;
-                case 'enum':
-                    $value = $this->resolveEnum($step, $value, $heap);
-                    break;
-                case 'env':
-                    $value = $this->resolveEnv($step, $value, $heap);
-                    break;
-                case 'file':
-                    $value = $this->resolveFile($step, $value, $heap);
-                    break;
-                case 'float':
-                    $value = $this->resolveFloat($value, $heap);
-                    break;
-                case 'int':
-                    $value = $this->resolveInt($value, $heap);
-                    break;
-                case 'json':
-                    $value = $this->resolveJson($value, $heap);
-                    break;
-                case 'not':
-                    $value = !$this->resolveBool($step, $value, $heap);
-                    break;
-                case 'key':
-                    $value = $this->resolveKey($step, $value, $heap);
-                    break;
-                case 'query_string':
-                    $value = $this->resolveQueryString($value);
-                    break;
-                case 'require':
-                    $value = $this->resolveRequire($step, $value, $heap);
-                    break;
-                case 'strcsv':
-                    $value = $this->resolveCsvString($value, $heap);
-                    break;
-                case 'string':
-                    $value = (string)$value;
-                    break;
-                case 'trim':
-                    $value = trim((string)$value);
-                    break;
-                case 'url':
-                    $value = $this->resolveURL($value, $heap);
-                    break;
-                case 'urlencode':
-                    $value = urlencode((string)$value);
-                    break;
-            }
+            $value = match ($step[0]) {
+                'base64' => $this->resolveBase64($step, $value, $heap),
+                'bool' => $this->resolveBool($step, $value, $heap),
+                'const' => $this->resolveConst($step, $value, $heap),
+                'direct' => $this->resolveDirect($step, $heap),
+                'enum' => $this->resolveEnum($step, $value, $heap),
+                'env' => $this->resolveEnv($step, $value, $heap),
+                'file' => $this->resolveFile($step, $value, $heap),
+                'float' => $this->resolveFloat($value, $heap),
+                'int' => $this->resolveInt($value, $heap),
+                'json' => $this->resolveJson($value, $heap),
+                'not' => !$this->resolveBool($step, $value, $heap),
+                'key' => $this->resolveKey($step, $value, $heap),
+                'query_string' => $this->resolveQueryString($value),
+                'require' => $this->resolveRequire($step, $value, $heap),
+                'strcsv' => $this->resolveCsvString($value, $heap),
+                'string' => (string)$value,
+                'trim' => trim((string)$value),
+                'url' => $this->resolveURL($value, $heap),
+                'urlencode' => urlencode((string)$value),
+            };
         }
 
         return $value;
