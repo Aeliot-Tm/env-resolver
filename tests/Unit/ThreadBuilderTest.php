@@ -29,6 +29,8 @@ final class ThreadBuilderTest extends TestCase
         yield 'json as env key' => [[['env', 'json']], 'json'];
         yield 'require as env key' => [[['env', 'require']], 'require'];
         yield 'string as env key' => [[['env', 'string']], 'string'];
+        yield 'trim as env key' => [[['env', 'trim']], 'trim'];
+        yield 'urlencode as env key' => [[['env', 'urlencode']], 'urlencode'];
 
         // Constant processor
         yield 'simple const' => [[['const', 'MY_ENV']], 'const:MY_ENV'];
@@ -72,6 +74,8 @@ final class ThreadBuilderTest extends TestCase
         yield 'json of env' => [[['env', 'MY_ENV'], ['json']], 'json:MY_ENV'];
         yield 'double json of env' => [[['env', 'MY_ENV'], ['json'], ['json']], 'json:json:MY_ENV'];
         yield 'string of env' => [[['env', 'MY_ENV'], ['string']], 'string:MY_ENV'];
+        yield 'trim of env' => [[['env', 'MY_ENV'], ['trim']], 'trim:MY_ENV'];
+        yield 'urlencode of env' => [[['env', 'MY_ENV'], ['urlencode']], 'urlencode:MY_ENV'];
 
         // Direct modifier
         yield 'direct base64 value' => [[['direct', 'W10=']], 'direct:W10='];

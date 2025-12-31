@@ -151,6 +151,12 @@ final readonly class Resolver
                 case 'string':
                     $value = (string)$value;
                     break;
+                case 'trim':
+                    $value = trim((string)$value);
+                    break;
+                case 'urlencode':
+                    $value = urlencode((string)$value);
+                    break;
             }
         }
 

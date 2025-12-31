@@ -205,6 +205,9 @@ final class ResolverTest extends TestCase
         yield 'string 1 from floated direct value with tail on zeros' => ['1', 'string:float:direct:1.000'];
         yield 'string 1 from floated direct int value' => ['1', 'string:float:direct:1'];
         yield 'string 0 from inted direct float value' => ['0', 'string:int:direct:0.0'];
+
+        yield 'trim value' => ['a', 'trim:base64:direct:ICBhIA=='];
+        yield 'urlencode value' => ['Data123%21%40-_+%2B', 'urlencode:base64:direct:RGF0YTEyMyFALV8gKw=='];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]

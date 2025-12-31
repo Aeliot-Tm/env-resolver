@@ -46,6 +46,8 @@ final readonly class ThreadBuilder
                 'json',
                 'not',
                 'string',
+                'trim',
+                'urlencode',
             ], true)) {
                 $step[] = $part;
             }
