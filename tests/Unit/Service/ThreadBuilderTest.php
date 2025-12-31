@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Aeliot\EnvResolver\Test\Unit;
+namespace Aeliot\EnvResolver\Test\Unit\Service;
 
 use Aeliot\EnvResolver\Exception\InvalidHeapException;
-use Aeliot\EnvResolver\ThreadBuilder;
+use Aeliot\EnvResolver\Service\ThreadBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

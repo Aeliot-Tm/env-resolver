@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Aeliot\EnvResolver\Test\Unit;
+namespace Aeliot\EnvResolver\Test\Unit\Service;
 
 use Aeliot\EnvResolver\Exception\EnvFoundException;
 use Aeliot\EnvResolver\Exception\FileNotFoundException;
@@ -9,10 +9,10 @@ use Aeliot\EnvResolver\Exception\InvalidEnumException;
 use Aeliot\EnvResolver\Exception\InvalidNameException;
 use Aeliot\EnvResolver\Exception\InvalidValueException;
 use Aeliot\EnvResolver\Exception\NotSupportedEnumCaseException;
-use Aeliot\EnvResolver\Resolver;
+use Aeliot\EnvResolver\Service\Resolver;
+use Aeliot\EnvResolver\Service\ThreadBuilder;
 use Aeliot\EnvResolver\Test\Fixtures\Enum\ABDStringEnum;
 use Aeliot\EnvResolver\Test\Fixtures\Enum\OneToFiveEnum;
-use Aeliot\EnvResolver\ThreadBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;

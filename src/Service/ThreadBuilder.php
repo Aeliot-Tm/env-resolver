@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Aeliot\EnvResolver;
+namespace Aeliot\EnvResolver\Service;
 
 use Aeliot\EnvResolver\Exception\InvalidHeapException;
 
