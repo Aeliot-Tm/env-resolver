@@ -178,7 +178,7 @@ final class ResolverTest extends TestCase
 
         yield 'bool false by not of bool from direct int value' => [false, 'not:bool:direct:1'];
         yield 'csv string from direct base64 value' => [
-            ['John Doe','Nancy Adams'],
+            ['John Doe', 'Nancy Adams'],
             'strcsv:base64:direct:IkpvaG4gRG9lIiwiTmFuY3kgQWRhbXMi',
         ];
 
@@ -212,6 +212,16 @@ final class ResolverTest extends TestCase
 
         yield 'trim value' => ['a', 'trim:base64:direct:ICBhIA=='];
         yield 'urlencode value' => ['Data123%21%40-_+%2B', 'urlencode:base64:direct:RGF0YTEyMyFALV8gKw=='];
+        yield 'key int from direct base64 json value' => [
+            'Nancy Adams',
+            // ["John Doe","Nancy Adams"]
+            'key:1:json:base64:direct:WyJKb2huIERvZSIsIk5hbmN5IEFkYW1zIl0=',
+        ];
+        yield 'key nested from direct base64 json value' => [
+            'Nancy Adams',
+            // {"parent":{"name": "John Doe","child":"Nancy Adams"}}
+            'key:child:key:parent:json:base64:direct:eyJwYXJlbnQiOnsibmFtZSI6ICJKb2huIERvZSIsImNoaWxkIjoiTmFuY3kgQWRhbXMifX0=',
+        ];
     }
 
     #[DataProvider('getDataForTestPositiveFlow')]

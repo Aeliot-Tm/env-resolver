@@ -29,6 +29,7 @@ final class ThreadBuilderTest extends TestCase
         yield 'float as env key' => [[['env', 'float']], 'float'];
         yield 'int as env key' => [[['env', 'int']], 'int'];
         yield 'json as env key' => [[['env', 'json']], 'json'];
+        yield 'key as env key' => [[['env', 'key']], 'key'];
         yield 'not as env key' => [[['env', 'not']], 'not'];
         yield 'require as env key' => [[['env', 'require']], 'require'];
         yield 'string as env key' => [[['env', 'string']], 'string'];
@@ -77,6 +78,9 @@ final class ThreadBuilderTest extends TestCase
         yield 'int of env' => [[['env', 'MY_ENV'], ['int']], 'int:MY_ENV'];
         yield 'json of env' => [[['env', 'MY_ENV'], ['json']], 'json:MY_ENV'];
         yield 'double json of env' => [[['env', 'MY_ENV'], ['json'], ['json']], 'json:json:MY_ENV'];
+        yield 'key of env' => [[['env', 'MY_ENV'], ['key','a']], 'key:a:MY_ENV'];
+        yield 'key int of env' => [[['env', 'MY_ENV'], ['key','1']], 'key:1:MY_ENV'];
+        yield 'key nested of env' => [[['env', 'MY_ENV'], ['key','parent'], ['key','child']], 'key:child:key:parent:MY_ENV'];
         yield 'string of env' => [[['env', 'MY_ENV'], ['string']], 'string:MY_ENV'];
         yield 'trim of env' => [[['env', 'MY_ENV'], ['trim']], 'trim:MY_ENV'];
         yield 'urlencode of env' => [[['env', 'MY_ENV'], ['urlencode']], 'urlencode:MY_ENV'];

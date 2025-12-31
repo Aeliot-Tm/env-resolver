@@ -53,6 +53,15 @@ final readonly class ThreadBuilder
                 $step[] = $part;
             }
 
+            if (in_array($part, ['key'], true)) {
+                $step[] = $part;
+                if (count($parts) < 2) {
+                    throw new \RuntimeException(sprintf('Missed key in heap: %s', $heap));
+                }
+
+                $step[] = array_shift($parts);
+            }
+
             $steps[] = $step;
         } while ($parts);
 
