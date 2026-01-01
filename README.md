@@ -28,23 +28,6 @@ composer require aeliot/env-resolver
 
 ## Quick Start
 
-### Basic Usage
-
-```php
-use Aeliot\EnvResolver\Service\Resolver;
-
-$resolver = new Resolver();
-
-// Simple environment variable
-$_ENV['DATABASE_URL'] = 'mysql://localhost/mydb';
-$value = $resolver->resolve('DATABASE_URL');
-// Result: 'mysql://localhost/mydb'
-
-// Explicit env modifier
-$value = $resolver->resolve('env:DATABASE_URL');
-// Result: 'mysql://localhost/mydb'
-```
-
 ### String Processing with Placeholders
 
 ```php
@@ -58,6 +41,16 @@ $_ENV['PORT'] = '5432';
 $config = 'postgres://%env(HOST)%:%env(PORT)%/database';
 $result = $processor->process($config);
 // Result: 'postgres://localhost:5432/database'
+```
+
+
+It allows to process entire config:
+
+```php
+use Aeliot\EnvResolver\Service\StringProcessor;
+
+$preparedConfig = (new StringProcessor())->process(file_get_contents('/path/to/config.yaml'));
+// Result: all instructions '%env(MY_ENV_VAR)%' resolved to <my_env_var_value> 
 ```
 
 ## Modifiers
@@ -109,6 +102,24 @@ Modifiers are chained using `:` separator and processed from right to left.
 | `enum` | Convert to BackedEnum | `enum:App\Status:MY_VAR` |
 
 ## Examples
+
+
+### Basic Usage
+
+```php
+use Aeliot\EnvResolver\Service\Resolver;
+
+$resolver = new Resolver();
+
+// Simple environment variable
+$_ENV['DATABASE_URL'] = 'mysql://localhost/mydb';
+$value = $resolver->resolve('DATABASE_URL');
+// Result: 'mysql://localhost/mydb'
+
+// Explicit env modifier
+$value = $resolver->resolve('env:DATABASE_URL');
+// Result: 'mysql://localhost/mydb'
+```
 
 ### Chained Modifiers
 
