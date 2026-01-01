@@ -169,10 +169,17 @@ $result = $processor->process('%env(json:base64:POSITION_CONFIG)%');
 // Custom: join array elements
 $result = $processor->process(
     '%env(json:base64:direct:POSITION_CONFIG)%',
-    fn(mixed $value) => is_array($value) ? implode(', ', $value) : (string)$value
+    static function (mixed $value, string $heap): string {
+        if ('json:base64:direct:POSITION_CONFIG' === $heap){
+            $value = implode(', ', $value);
+        }
+        return \is_string($value) ? $value : json_encode($value, \JSON_THROW_ON_ERROR);
+    }
 );
 // Result: '/path/to/file:127'
 ```
+
+Similarly, you may return tilda (`~`) for `null`-values when process YAML.
 
 ### Reading from Files
 

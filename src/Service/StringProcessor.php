@@ -34,6 +34,10 @@ final readonly class StringProcessor
     {
     }
 
+    /**
+     * @param (\Closure(mixed, string): string)|null $postProcessor First argument is value.
+     *                                                              Second one is `heap` (env key with modifiers).
+     */
     public function process(string $config, ?\Closure $postProcessor = null): string
     {
         $postProcessor ??= static function (mixed $value): string {
@@ -54,7 +58,7 @@ final readonly class StringProcessor
 
             // Process placeholders from right to left to preserve positions
             foreach (array_reverse($placeholders) as [$start, $end, $heap]) {
-                $resolvedValue = (string) $postProcessor($this->resolver->resolve($heap));
+                $resolvedValue = (string) $postProcessor($this->resolver->resolve($heap), $heap);
                 $config = substr($config, 0, $start) . $resolvedValue . substr($config, $end);
             }
 
