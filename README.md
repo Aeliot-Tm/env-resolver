@@ -160,15 +160,15 @@ $result = $processor->process('Use %%env(VAR)%% syntax');
 ```php
 $processor = new StringProcessor();
 
-$_ENV['CONFIG'] = '25';
+$_ENV['POSITION_CONFIG'] = 'eyJwYXRoIjoiL3BhdGgvdG8vZmlsZSIsImxpbmUiOiAxMjd9';
 
 // Default: non-scalar values are JSON encoded
-$result = $processor->process('%env(json:base64:direct:eyJwYXRoIjoiL3BhdGgvdG8vZmlsZSIsImxpbmUiOiAxMjd9)%');
+$result = $processor->process('%env(json:base64:POSITION_CONFIG)%');
 // Result: '{"path":"/path/to/file","line": 127}'
 
 // Custom: join array elements
 $result = $processor->process(
-    '%env(json:base64:direct:eyJwYXRoIjoiL3BhdGgvdG8vZmlsZSIsImxpbmUiOiAxMjd9)%',
+    '%env(json:base64:direct:POSITION_CONFIG)%',
     fn(mixed $value) => is_array($value) ? implode(', ', $value) : (string)$value
 );
 // Result: '/path/to/file:127'
