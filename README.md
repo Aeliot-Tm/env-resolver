@@ -4,7 +4,12 @@
 [![Security Audit](https://github.com/Aeliot-Tm/env-resolver/actions/workflows/security-audit.yaml/badge.svg?branch=main)](https://github.com/Aeliot-Tm/env-resolver/actions/workflows/security-audit.yaml?query=branch%3Amain)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A powerful PHP library for resolving environment variables, constants, files, and other data sources using a flexible chain of modifiers. Inspired by Symfony's env processors but works standalone without framework dependencies.
+A powerful PHP library for resolving environment variables, constants, files, and other data sources
+using a flexible chain of modifiers. Inspired by Symfony's env processors but works standalone
+without framework dependencies.
+
+It helps you to keep configs clean without commiting of sensitive data.
+Just store instructions which environment variable use while running. They look like `%env(MY_VAR)%`.
 
 ## Features
 
@@ -42,7 +47,6 @@ $config = 'postgres://%env(HOST)%:%env(PORT)%/database';
 $result = $processor->process($config);
 // Result: 'postgres://localhost:5432/database'
 ```
-
 
 It allows to process entire config:
 
