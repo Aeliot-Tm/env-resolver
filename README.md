@@ -54,7 +54,7 @@ It allows to process entire config:
 use Aeliot\EnvResolver\Service\StringProcessor;
 
 $preparedConfig = (new StringProcessor())->process(file_get_contents('/path/to/config.yaml'));
-// Result: all instructions '%env(MY_ENV_VAR)%' resolved to <my_env_var_value> 
+// Result: all instructions '%env(MY_ENV_VAR)%' resolved to <my_env_var_value>
 ```
 
 ## Modifiers
