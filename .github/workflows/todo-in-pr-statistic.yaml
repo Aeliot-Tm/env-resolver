@@ -18,7 +18,6 @@ jobs:
           config: |
             paths:
               in: .
-              append: bin/todo-registrar
               exclude:
                 - tests/fixtures
                 - var
@@ -28,6 +27,3 @@ jobs:
               glueSequentialComments: true
             registrar:
               type: DryRun
-            tags:
-              - todo
-              - fixme
