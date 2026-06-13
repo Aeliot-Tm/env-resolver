@@ -44,7 +44,7 @@ jobs:
                     - tech-debt
                   tagPrefix: tag-
                   showContext: numbered
-                  contextTitle: "## Added in position:"
+                  contextTitle: "**Added in position:**"
                 service:
                   personalAccessToken: "%env(GH_PERSONAL_ACCESS_TOKEN)%"
                   repository: "${{ github.repository }}"
