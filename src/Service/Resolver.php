@@ -240,7 +240,7 @@ final readonly class Resolver implements ResolverInterface
             );
         }
 
-        // TODO: consider checking if not array?
+        // TODO: #2 consider checking if not array?
 
         return $value;
     }
