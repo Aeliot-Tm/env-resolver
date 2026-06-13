@@ -26,7 +26,6 @@ jobs:
           config: |
             paths:
               in: .
-              append: bin/todo-registrar
               exclude:
                 - tests/fixtures
                 - var
@@ -39,18 +38,15 @@ jobs:
               options:
                 issue:
                   addTagToLabels: true
+                  contextTitle: "**Added in position:**"
                   labels:
                     - needs-review
                     - tech-debt
-                  tagPrefix: tag-
                   showContext: numbered
-                  contextTitle: "**Added in position:**"
+                  tagPrefix: tag-
                 service:
                   personalAccessToken: "%env(GH_PERSONAL_ACCESS_TOKEN)%"
                   repository: "${{ github.repository }}"
-            tags:
-              - todo
-              - fixme
           env_vars: |
             GH_PERSONAL_ACCESS_TOKEN
           new_branch_name: 'todo-registrar'
