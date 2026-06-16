@@ -25,17 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-php
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
-
-      - name: Install packages by Composer
-        uses: ramsey/composer-install@v3
+      - uses: ./.github/actions/setup-composer
 
       - name: Cache tools installed with PHIVE
         uses: actions/cache@v4
@@ -67,17 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-php
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
-
-      - name: Install packages by Composer
-        uses: ramsey/composer-install@v3
+      - uses: ./.github/actions/setup-composer
 
       - name: Cache tools installed with PHIVE
         uses: actions/cache@v4
@@ -109,17 +89,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-php
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
-
-      - name: Install packages by Composer
-        uses: ramsey/composer-install@v3
+      - uses: ./.github/actions/setup-composer
 
       - name: Cache tools installed with PHIVE
         uses: actions/cache@v4
@@ -151,17 +121,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-php
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
-
-      - name: Install packages by Composer
-        uses: ramsey/composer-install@v3
+      - uses: ./.github/actions/setup-composer
 
       - name: Cache tools installed with PHIVE
         uses: actions/cache@v4
@@ -193,17 +153,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-php
-
-      - name: Cache Installed Dependencies
-        id: composer-cache
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "os-${{ runner.os }}-php-${{ runner.php-version }}-composer-"
-
-      - name: Install packages by Composer
-        uses: ramsey/composer-install@v3
+      - uses: ./.github/actions/setup-composer
 
       - name: Cache tools installed with PHIVE
         uses: actions/cache@v4
