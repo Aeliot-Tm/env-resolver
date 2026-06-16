@@ -19,7 +19,7 @@ jobs:
           tools: composer
           coverage: none
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: 'Check security vulnerabilities'
         run: composer audit --locked
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: 'Psalm Security Scan'
         uses: psalm/psalm-github-security-scan@1.4.0
