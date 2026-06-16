@@ -1,7 +1,17 @@
 name: Security Audit
 
 on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - review_requested
   push:
+    branches:
+      - main
+      - 'rc*'
   schedule:
     - cron: '45 12 * * *'
 
@@ -13,13 +23,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-          tools: composer
-          coverage: none
-
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-php
+      - uses: ./.github/actions/setup-composer
 
       - name: 'Check security vulnerabilities'
         run: composer audit --locked
@@ -33,12 +39,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: 'Psalm Security Scan'
-        uses: psalm/psalm-github-security-scan@f3e6fd9432bc3e44aec078572677ce9d2ef9c287
+        uses: psalm/psalm-github-security-scan@1.4.0
 
       - name: 'Upload Security Analysis results to GitHub'
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
